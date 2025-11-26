@@ -1,0 +1,62 @@
+title: ALFA 360
+description: Framework for Zero-Hallucination AI & Strategic Thinking by Karen Tonoyan
+author: Karen Tonoyan
+lang: pl-PL
+
+# Theme
+theme: minima
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# SASS configuration
+sass:
+  sass_dir: assets/css
+  style: compressed
+
+# Navigation
+header_pages:
+  - README.md
+  - Manifesto-PL.md
+  - docs/filters.md
+
+# Default image for social sharing
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: "/assets/images/alfa-banner.png"
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .git
+  - .gitignore
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Social links
+social:
+  name: Karen Tonoyan
+  links:
+    - https://github.com/Karen86Tonoyan
+
+# SEO
+url: "https://karen86tonoyan.github.io"
+baseurl: "/-ALFA-360-Open-Manifesto-"
+
+# Repository
+repository: Karen86Tonoyan/-ALFA-360-Open-Manifesto-
+
+# Show downloads
+show_downloads: true
