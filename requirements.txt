@@ -1,19 +1,21 @@
-# ALFA ECOSYSTEM - Requirements
-# Author: Karen Tonoyan
-# Version: 1.0
+# Cerber ALFA 360 - Dependencies
+# Karen Tonoyan © 2025 - ALFA Foundation
 
-# Core
-python-dateutil>=2.8.0
+# Core (no dependencies for basic console mode)
+# Python 3.9+ required
 
-# Optional - for Telegram Bot
-python-telegram-bot>=20.0
+# REST API (optional)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
 
-# Optional - for AI APIs
-openai>=1.0.0
-anthropic>=0.18.0
+# WebSocket (optional)
+websockets>=12.0
 
-# Optional - for web interface
-flask>=2.0.0
+# Development (optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+httpx>=0.25.0
 
-# Development
-pytest>=7.0.0
+# Type checking (optional)
+mypy>=1.7.0

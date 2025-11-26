@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐉 Cerber ALFA 360 Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1f2937;
+            --accent-cyan: #22d3ee;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --accent-orange: #f97316;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.3);
+            --glow-purple: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-title .dragon {
+            font-size: 40px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-status {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        .status-dot.online { background: var(--accent-green); }
+        .status-dot.offline { background: var(--accent-red); }
+        .status-dot.warning { background: var(--accent-yellow); }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+
+        /* Process Grid */
+        .processes-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-cyan);
+        }
+
+        .processes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .process-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .process-card.running {
+            border-color: var(--accent-green);
+        }
+
+        .process-card.running::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+            animation: progress 2s linear infinite;
+        }
+
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .process-symbol {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .process-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .process-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .process-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .process-state {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .process-state.running { color: var(--accent-green); }
+        .process-state.stopped { color: var(--accent-red); }
+
+        .process-logs {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Knox Panel */
+        .knox-panel {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #1a1a2e 100%);
+            border: 1px solid var(--accent-purple);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--glow-purple);
+        }
+
+        .knox-status-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .knox-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .knox-item-label {
+            color: var(--text-secondary);
+        }
+
+        .knox-item-value {
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .knox-item-value.secure { color: var(--accent-green); }
+        .knox-item-value.warning { color: var(--accent-yellow); }
+        .knox-item-value.danger { color: var(--accent-red); }
+
+        /* Whisper Panel */
+        .whisper-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .whisper-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .whisper-stat {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .whisper-stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+        }
+
+        .whisper-stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Log Terminal */
+        .log-terminal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: var(--accent-red); }
+        .terminal-dot.yellow { background: var(--accent-yellow); }
+        .terminal-dot.green { background: var(--accent-green); }
+
+        .log-entries {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 8px;
+        }
+
+        .log-time {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .log-process {
+            color: var(--accent-purple);
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+
+        .log-message {
+            color: var(--text-secondary);
+        }
+
+        /* Control Buttons */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--accent-green), #16a34a);
+            color: white;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, var(--accent-red), #dc2626);
+            color: white;
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, var(--accent-cyan), #0891b2);
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.4);
+        }
+
+        /* API Input */
+        .api-config {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .api-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .api-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-connect {
+            padding: 12px 24px;
+            background: var(--accent-purple);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .processes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        // Process configuration
+        const PROCESSES_CONFIG = {
+            "甲": { name: "system_monitor", desc: "系统监控 - Kernel monitoring" },
+            "乙": { name: "guardian_watchdog", desc: "守护者 - Guardian watchdog" },
+            "丙": { name: "memory_scan", desc: "内存扫描 - Memory analyzer" },
+            "丁": { name: "purge_emulator", desc: "清理模拟 - Cache purge" },
+            "戊": { name: "network_trace", desc: "网络追踪 - Packet monitor" },
+            "己": { name: "integrity_check", desc: "完整性检查 - File integrity" },
+            "庚": { name: "knox_detector", desc: "Knox检测 - Knox status" },
+            "辛": { name: "alfa_bridge_sync", desc: "ALFA同步 - Bridge sync" },
+            "壬": { name: "whisper_filter", desc: "低语过滤 - Whisper filter" },
+            "癸": { name: "threat_analyzer", desc: "威胁分析 - Threat assessment" },
+            "金": { name: "crypto_guardian", desc: "加密守护 - Crypto ops" },
+            "木": { name: "log_aggregator", desc: "日志聚合 - Log collector" },
+            "水": { name: "flow_controller", desc: "流量控制 - Flow management" },
+            "火": { name: "alert_dispatcher", desc: "警报分发 - Alert system" },
+            "土": { name: "state_persistence", desc: "状态持久化 - State backup" },
+        };
+
+        // Process Card Component
+        function ProcessCard({ symbol, config, status, onToggle }) {
+            const isRunning = status?.state === 'running';
+            
+            return (
+                <div 
+                    className={`process-card ${isRunning ? 'running' : ''}`}
+                    onClick={() => onToggle(symbol)}
+                >
+                    <div className="process-symbol">{symbol}</div>
+                    <div className="process-name">{config.name}</div>
+                    <div className="process-desc">{config.desc}</div>
+                    <div className="process-status">
+                        <div className={`process-state ${isRunning ? 'running' : 'stopped'}`}>
+                            {isRunning ? '● RUNNING' : '○ STOPPED'}
+                        </div>
+                        <div className="process-logs">
+                            {status?.log_count || 0} logs
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Knox Panel Component
+        function KnoxPanel({ knoxStatus }) {
+            const getValueClass = (key, value) => {
+                if (key === 'root_type') {
+                    if (value === 'knox_protected') return 'secure';
+                    if (value === 'real') return 'danger';
+                    return 'warning';
+                }
+                if (typeof value === 'boolean') {
+                    return value ? 'secure' : 'warning';
+                }
+                return '';
+            };
+
+            const formatValue = (value) => {
+                if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+                if (value === null || value === undefined) return 'N/A';
+                return String(value);
+            };
+
+            return (
+                <div className="knox-panel">
+                    <div className="section-title">
+                        🔐 Samsung Knox Status
+                    </div>
+                    <div className="knox-status-grid">
+                        <div className="knox-item">
+                            <span className="knox-item-label">Platform</span>
+                            <span className="knox-item-value">
+                                {knoxStatus?.is_android ? 'Android' : 'Desktop'}
+                            </span>
+                        </div>
+                        <div className="knox-item">
+                            <span className="knox-item-label">Root Type</span>
+                            <span className={`knox-item-value ${getValueClass('root_type', knoxStatus?.root_type)}`}>
+                                {formatValue(knoxStatus?.root_type)}
+                            </span>
+                        </div>
+                        <div className="knox-item">
+                            <span className="knox-item-label">Knox Version</span>
+                            <span className="knox-item-value">
+                                {formatValue(knoxStatus?.knox_version)}
+                            </span>
+                        </div>
+                        <div className="knox-item">
+                            <span className="knox-item-label">Knox Enabled</span>
+                            <span className={`knox-item-value ${getValueClass('enabled', knoxStatus?.knox_enabled)}`}>
+                                {formatValue(knoxStatus?.knox_enabled)}
+                            </span>
+                        </div>
+                        <div className="knox-item">
+                            <span className="knox-item-label">Secure Folder</span>
+                            <span className={`knox-item-value ${getValueClass('secure', knoxStatus?.secure_folder_available)}`}>
+                                {formatValue(knoxStatus?.secure_folder_available)}
+                            </span>
+                        </div>
+                        <div className="knox-item">
+                            <span className="knox-item-label">Attestation</span>
+                            <span className="knox-item-value">
+                                {formatValue(knoxStatus?.attestation_status)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Whisper Panel Component
+        function WhisperPanel({ whisperStats }) {
+            const threatRate = whisperStats?.threat_rate || 0;
+            
+            return (
+                <div className="whisper-panel">
+                    <div className="section-title">
+                        👁️ Whisper Perception
+                    </div>
+                    <div className="whisper-stats">
+                        <div className="whisper-stat">
+                            <div className="whisper-stat-value">
+                                {whisperStats?.processed_count || 0}
+                            </div>
+                            <div className="whisper-stat-label">Processed</div>
+                        </div>
+                        <div className="whisper-stat">
+                            <div className="whisper-stat-value" style={{color: threatRate > 0.1 ? '#ef4444' : '#22c55e'}}>
+                                {whisperStats?.threat_detected_count || 0}
+                            </div>
+                            <div className="whisper-stat-label">Threats</div>
+                        </div>
+                        <div className="whisper-stat">
+                            <div className="whisper-stat-value">
+                                {(threatRate * 100).toFixed(1)}%
+                            </div>
+                            <div className="whisper-stat-label">Threat Rate</div>
+                        </div>
+                        <div className="whisper-stat">
+                            <div className="whisper-stat-value">
+                                {whisperStats?.filters_active || 0}
+                            </div>
+                            <div className="whisper-stat-label">Filters</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Log Terminal Component
+        function LogTerminal({ logs }) {
+            return (
+                <div className="log-terminal">
+                    <div className="terminal-header">
+                        <div className="section-title">
+                            📜 Live Logs
+                        </div>
+                        <div className="terminal-dots">
+                            <div className="terminal-dot red"></div>
+                            <div className="terminal-dot yellow"></div>
+                            <div className="terminal-dot green"></div>
+                        </div>
+                    </div>
+                    <div className="log-entries">
+                        {logs.map((log, index) => (
+                            <div key={index} className="log-entry">
+                                <span className="log-time">[{log.timestamp}]</span>
+                                <span className="log-process">{log.process}</span>
+                                <span className="log-message">{log.message}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Main Dashboard Component
+        function CerberDashboard() {
+            const [apiUrl, setApiUrl] = useState('http://localhost:8360');
+            const [connected, setConnected] = useState(false);
+            const [status, setStatus] = useState(null);
+            const [logs, setLogs] = useState([]);
+            const [error, setError] = useState(null);
+
+            // Simulated data for demo mode
+            const demoStatus = {
+                engine: { running: true, uptime_seconds: 3600 },
+                knox: { 
+                    is_android: false, 
+                    root_type: 'simulated', 
+                    knox_version: null,
+                    knox_enabled: false,
+                    secure_folder_available: false,
+                    attestation_status: 'not_applicable'
+                },
+                whisper: { 
+                    processed_count: 42, 
+                    threat_detected_count: 2, 
+                    threat_rate: 0.048,
+                    filters_active: 10
+                },
+                processes: Object.fromEntries(
+                    Object.entries(PROCESSES_CONFIG).map(([symbol, config]) => [
+                        symbol,
+                        { 
+                            state: Math.random() > 0.3 ? 'running' : 'stopped',
+                            log_count: Math.floor(Math.random() * 100)
+                        }
+                    ])
+                )
+            };
+
+            const demoLogs = [
+                { timestamp: '12:34:56', process: 'guardian_watchdog', message: '守护线程运行中 (Guardian active) – token=3c8af97b' },
+                { timestamp: '12:34:52', process: 'system_monitor', message: '扫描系统内核 (Kernel scan) ... OK' },
+                { timestamp: '12:34:48', process: 'memory_scan', message: '内存检查: 使用率 67% ✓ OK' },
+                { timestamp: '12:34:44', process: 'network_trace', message: '网络流量监控: 45 包捕获 (packets)' },
+                { timestamp: '12:34:40', process: 'threat_analyzer', message: '威胁分析: Level 0 🟢 | Scanning...' },
+            ];
+
+            useEffect(() => {
+                // Start with demo data
+                setStatus(demoStatus);
+                setLogs(demoLogs);
+            }, []);
+
+            const fetchStatus = useCallback(async () => {
+                try {
+                    const response = await fetch(`${apiUrl}/status`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setStatus(data);
+                        setConnected(true);
+                        setError(null);
+                    }
+                } catch (err) {
+                    setError('Cannot connect to API. Running in demo mode.');
+                    setConnected(false);
+                }
+            }, [apiUrl]);
+
+            const handleConnect = () => {
+                fetchStatus();
+            };
+
+            const handleToggleProcess = async (symbol) => {
+                if (connected) {
+                    try {
+                        await fetch(`${apiUrl}/processes/action`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ symbol, action: 'toggle' })
+                        });
+                        fetchStatus();
+                    } catch (err) {
+                        console.error('Toggle failed:', err);
+                    }
+                } else {
+                    // Demo mode toggle
+                    setStatus(prev => ({
+                        ...prev,
+                        processes: {
+                            ...prev.processes,
+                            [symbol]: {
+                                ...prev.processes[symbol],
+                                state: prev.processes[symbol].state === 'running' ? 'stopped' : 'running'
+                            }
+                        }
+                    }));
+                }
+            };
+
+            const handleStartAll = async () => {
+                if (connected) {
+                    await fetch(`${apiUrl}/processes/start-all`, { method: 'POST' });
+                    fetchStatus();
+                } else {
+                    setStatus(prev => ({
+                        ...prev,
+                        processes: Object.fromEntries(
+                            Object.entries(prev.processes).map(([s, p]) => [s, {...p, state: 'running'}])
+                        )
+                    }));
+                }
+            };
+
+            const handleStopAll = async () => {
+                if (connected) {
+                    await fetch(`${apiUrl}/processes/stop-all`, { method: 'POST' });
+                    fetchStatus();
+                } else {
+                    setStatus(prev => ({
+                        ...prev,
+                        processes: Object.fromEntries(
+                            Object.entries(prev.processes).map(([s, p]) => [s, {...p, state: 'stopped'}])
+                        )
+                    }));
+                }
+            };
+
+            const runningCount = status ? 
+                Object.values(status.processes).filter(p => p.state === 'running').length : 0;
+
+            return (
+                <div className="dashboard">
+                    <header className="header">
+                        <div className="header-title">
+                            <span className="dragon">🐉</span>
+                            <div>
+                                <h1>CERBER ALFA 360</h1>
+                                <div style={{fontSize: '12px', color: '#94a3b8'}}>
+                                    Karen Tonoyan © 2025 - ALFA Foundation
+                                </div>
+                            </div>
+                        </div>
+                        <div className="header-status">
+                            <div className="status-badge">
+                                <div className={`status-dot ${connected ? 'online' : 'warning'}`}></div>
+                                <span>{connected ? 'API Connected' : 'Demo Mode'}</span>
+                            </div>
+                            <div className="status-badge">
+                                <span>{runningCount}/{Object.keys(PROCESSES_CONFIG).length} Active</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="api-config">
+                        <input 
+                            type="text" 
+                            className="api-input"
+                            value={apiUrl}
+                            onChange={(e) => setApiUrl(e.target.value)}
+                            placeholder="API URL (e.g., http://localhost:8360)"
+                        />
+                        <button className="btn-connect" onClick={handleConnect}>
+                            Connect
+                        </button>
+                    </div>
+
+                    {error && (
+                        <div style={{
+                            padding: '12px 20px',
+                            background: 'rgba(234, 179, 8, 0.1)',
+                            border: '1px solid #eab308',
+                            borderRadius: '8px',
+                            marginBottom: '20px',
+                            fontSize: '13px',
+                            color: '#eab308'
+                        }}>
+                            ⚠️ {error}
+                        </div>
+                    )}
+
+                    <div className="main-grid">
+                        <div className="processes-section">
+                            <div className="section-title">
+                                ⚡ Process Control (天干地支五行)
+                            </div>
+                            <div className="processes-grid">
+                                {Object.entries(PROCESSES_CONFIG).map(([symbol, config]) => (
+                                    <ProcessCard
+                                        key={symbol}
+                                        symbol={symbol}
+                                        config={config}
+                                        status={status?.processes?.[symbol]}
+                                        onToggle={handleToggleProcess}
+                                    />
+                                ))}
+                            </div>
+                            <div className="controls">
+                                <button className="btn btn-start" onClick={handleStartAll}>
+                                    ▶ Start All
+                                </button>
+                                <button className="btn btn-stop" onClick={handleStopAll}>
+                                    ⏹ Stop All
+                                </button>
+                                <button className="btn btn-refresh" onClick={fetchStatus}>
+                                    ↻ Refresh
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="sidebar">
+                            <KnoxPanel knoxStatus={status?.knox} />
+                            <WhisperPanel whisperStats={status?.whisper} />
+                        </div>
+                    </div>
+
+                    <LogTerminal logs={logs} />
+                </div>
+            );
+        }
+
+        // Render
+        ReactDOM.render(<CerberDashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
