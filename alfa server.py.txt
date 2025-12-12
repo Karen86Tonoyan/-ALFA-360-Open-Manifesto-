@@ -1,9 +1,0 @@
-import psutil
-
-class Cerber:
-    def scan_system(self):
-        return {
-            "cpu": psutil.cpu_percent(),
-            "memory": psutil.virtual_memory().percent,
-            "processes": len(psutil.pids())
-        }
