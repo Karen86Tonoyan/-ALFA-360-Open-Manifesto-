@@ -684,7 +684,7 @@
                         </div>
                     </div>
                     <div className="log-entries">
-                        {logs.map((log, index) => (
+                        {logs && logs.map((log, index) => (
                             <div key={index} className="log-entry">
                                 <span className="log-time">[{log.timestamp}]</span>
                                 <span className="log-process">{log.process}</span>
@@ -692,6 +692,81 @@
                             </div>
                         ))}
                     </div>
+                </div>
+            );
+        }
+
+        // AI Browser Component
+        function AIBrowser({ apiUrl }) {
+            const [url, setUrl] = useState('');
+            const [intent, setIntent] = useState('');
+            const [result, setResult] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState(null);
+
+            const handleBrowse = async () => {
+                if (!url || !intent) return;
+                setLoading(true);
+                setError(null);
+                try {
+                    const response = await fetch(`${apiUrl}/browser/request`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url, intent })
+                    });
+                    const data = await response.json();
+                    if (data.status === 'BLOCKED') {
+                        setError(`Blocked: ${data.reason}`);
+                        setResult(null);
+                    } else {
+                        setResult(data.content);
+                    }
+                } catch (err) {
+                    setError('Failed to fetch from browser API');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="whisper-panel" style={{marginTop: '24px'}}>
+                    <div className="section-title">🌐 AI Secure Browser (Studio Label)</div>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                        <input
+                            className="api-input"
+                            placeholder="AI Intent (Why do you want to visit this page?)"
+                            value={intent}
+                            onChange={(e) => setIntent(e.target.value)}
+                        />
+                        <div style={{display: 'flex', gap: '12px'}}>
+                            <input
+                                className="api-input"
+                                placeholder="Target URL"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                            />
+                            <button className="btn-connect" onClick={handleBrowse} disabled={loading}>
+                                {loading ? 'Scanning...' : 'Browse'}
+                            </button>
+                        </div>
+                    </div>
+                    {error && <div style={{color: 'var(--accent-red)', marginTop: '12px', fontSize: '12px'}}>{error}</div>}
+                    {result && (
+                        <div style={{marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'}}>
+                            <div>
+                                <div style={{fontSize: '10px', color: 'var(--accent-purple)', marginBottom: '8px'}}>NARRATIVE / INTERPRETATION</div>
+                                <div style={{padding: '12px', background: 'var(--bg-primary)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)'}}>
+                                    {result.narrative.map((n, i) => <p key={i} style={{marginBottom: '8px'}}>{n}</p>)}
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{fontSize: '10px', color: 'var(--accent-cyan)', marginBottom: '8px'}}>VERIFIED FACTS / DATA</div>
+                                <div style={{padding: '12px', background: 'var(--bg-primary)', borderRadius: '8px', fontSize: '12px', color: 'var(--accent-cyan)'}}>
+                                    {result.facts.map((f, i) => <div key={i} style={{marginBottom: '4px'}}>• {f}</div>)}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -704,47 +779,11 @@
             const [logs, setLogs] = useState([]);
             const [error, setError] = useState(null);
 
-            // Simulated data for demo mode
-            const demoStatus = {
-                engine: { running: true, uptime_seconds: 3600 },
-                knox: { 
-                    is_android: false, 
-                    root_type: 'simulated', 
-                    knox_version: null,
-                    knox_enabled: false,
-                    secure_folder_available: false,
-                    attestation_status: 'not_applicable'
-                },
-                whisper: { 
-                    processed_count: 42, 
-                    threat_detected_count: 2, 
-                    threat_rate: 0.048,
-                    filters_active: 10
-                },
-                processes: Object.fromEntries(
-                    Object.entries(PROCESSES_CONFIG).map(([symbol, config]) => [
-                        symbol,
-                        { 
-                            state: Math.random() > 0.3 ? 'running' : 'stopped',
-                            log_count: Math.floor(Math.random() * 100)
-                        }
-                    ])
-                )
-            };
-
-            const demoLogs = [
-                { timestamp: '12:34:56', process: 'guardian_watchdog', message: '守护线程运行中 (Guardian active) – token=3c8af97b' },
-                { timestamp: '12:34:52', process: 'system_monitor', message: '扫描系统内核 (Kernel scan) ... OK' },
-                { timestamp: '12:34:48', process: 'memory_scan', message: '内存检查: 使用率 67% ✓ OK' },
-                { timestamp: '12:34:44', process: 'network_trace', message: '网络流量监控: 45 包捕获 (packets)' },
-                { timestamp: '12:34:40', process: 'threat_analyzer', message: '威胁分析: Level 0 🟢 | Scanning...' },
-            ];
-
             useEffect(() => {
-                // Start with demo data
-                setStatus(demoStatus);
-                setLogs(demoLogs);
-            }, []);
+                fetchStatus();
+                const interval = setInterval(fetchStatus, 5000);
+                return () => clearInterval(interval);
+            }, [apiUrl]);
 
             const fetchStatus = useCallback(async () => {
                 try {
@@ -752,6 +791,22 @@
                     if (response.ok) {
                         const data = await response.json();
                         setStatus(data);
+
+                        // Extract logs from processes
+                        const allLogs = [];
+                        if (data.processes) {
+                            Object.entries(data.processes).forEach(([symbol, p]) => {
+                                if (p.last_log) {
+                                    allLogs.push({
+                                        timestamp: p.start_time ? p.start_time.split('T')[1].split('.')[0] : 'N/A',
+                                        process: p.name,
+                                        message: p.last_log
+                                    });
+                                }
+                            });
+                        }
+                        setLogs(allLogs.sort((a, b) => b.timestamp.localeCompare(a.timestamp)));
+
                         setConnected(true);
                         setError(null);
                     }
@@ -820,6 +875,21 @@
                 }
             };
 
+            const handleScanKnowledge = async (source) => {
+                if (connected) {
+                    try {
+                        await fetch(`${apiUrl}/knowledge/scan`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ source })
+                        });
+                        fetchStatus();
+                    } catch (err) {
+                        console.error('Scan failed:', err);
+                    }
+                }
+            };
+
             const runningCount = status ? 
                 Object.values(status.processes).filter(p => p.state === 'running').length : 0;
 
@@ -878,6 +948,18 @@
                             <div className="section-title">
                                 ⚡ Process Control (天干地支五行)
                             </div>
+                            <div style={{marginBottom: '16px', display: 'flex', gap: '20px'}}>
+                                {status?.engine?.system_metrics && (
+                                    <>
+                                        <div style={{fontSize: '12px', color: 'var(--accent-cyan)'}}>
+                                            CPU: {status.engine.system_metrics.cpu_usage}%
+                                        </div>
+                                        <div style={{fontSize: '12px', color: 'var(--accent-purple)'}}>
+                                            MEM: {status.engine.system_metrics.memory_usage}%
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                             <div className="processes-grid">
                                 {Object.entries(PROCESSES_CONFIG).map(([symbol, config]) => (
                                     <ProcessCard
@@ -906,6 +988,32 @@
                             <KnoxPanel knoxStatus={status?.knox} />
                             <WhisperPanel whisperStats={status?.whisper} />
                         </div>
+                    </div>
+
+                    <AIBrowser apiUrl={apiUrl} />
+
+                    <div className="whisper-panel" style={{marginTop: '24px'}}>
+                        <div className="section-title">🧠 Knowledge Graph Integration</div>
+                        <div style={{display: 'flex', gap: '12px', marginBottom: '16px'}}>
+                            <button className="btn-connect" onClick={() => handleScanKnowledge('Google Drive')}>Scan Google Drive</button>
+                            <button className="btn-connect" onClick={() => handleScanKnowledge('Samsung Notes')} style={{background: 'var(--accent-cyan)'}}>Scan Samsung Notes</button>
+                        </div>
+                        {status?.knowledge_graph && (
+                            <div className="knox-status-grid">
+                                <div className="knox-item">
+                                    <span className="knox-item-label">Sources Scanned</span>
+                                    <span className="knox-item-value">{status.knowledge_graph.sources.join(', ') || 'None'}</span>
+                                </div>
+                                <div className="knox-item">
+                                    <span className="knox-item-label">Entities Discovered</span>
+                                    <span className="knox-item-value">{status.knowledge_graph.entities}</span>
+                                </div>
+                                <div className="knox-item">
+                                    <span className="knox-item-label">Last Scan</span>
+                                    <span className="knox-item-value">{status.knowledge_graph.last_scan || 'N/A'}</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <LogTerminal logs={logs} />
