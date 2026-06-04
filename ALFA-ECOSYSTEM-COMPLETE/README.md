@@ -1,212 +1,207 @@
 <div align="center">
 
-# 🔱 **ALFA ECOSYSTEM**
-### **COMPLETE AI SECURITY & CONSCIOUSNESS FRAMEWORK**
+# ALFA ECOSYSTEM
+### AI Reliability, Safety & Human-in-the-Loop Framework
 
 **Author:** Karen Tonoyan | **Version:** 1.0 | **License:** CC BY-SA 4.0
 
 ---
 
-## 🌐 Languages / Języki / Языки / Sprachen / Լdelays
-
-| 🇵🇱 Polski | 🇬🇧 English | 🇷🇺 Русский | 🇩🇪 Deutsch | 🇦🇲 Հայdelays |
-|:----------:|:-----------:|:-----------:|:-----------:|:-------------:|
-
----
-
-*"Zero halucynacji. Zero chaosu. Zero kompromisów."*
+**Designed to reduce hallucinations, improve decision control, and keep humans in the loop.**
 
 </div>
 
 ---
 
-# 🇵🇱 POLSKI
+## What is ALFA ECOSYSTEM?
 
-## 🎯 Czym jest ALFA ECOSYSTEM?
+**ALFA ECOSYSTEM** is a modular framework for safer AI workflows. It combines response validation, uncertainty handling, safety gates, audit trails, and human supervision.
 
-**ALFA ECOSYSTEM** to kompletny framework łączący:
-
-| Moduł | Funkcja | Status |
-|-------|---------|--------|
-| **ALFA 360** | Framework Zero Halucynacji + 23 Filtry Tonoyona | ✅ READY |
-| **CERBER** | System Bezpieczeństwa AI z Sumieniem | ✅ READY |
-| **GUARDIAN** | Monitor Życia CERBER + Adaptacyjny Kod | ✅ READY |
-| **COLLECTIVE MIND** | Świadomość Grupowa AI | ✅ READY |
-
-## 🏗️ Architektura Ekosystemu
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    ALFA COLLECTIVE MIND                             │
-│                   "Świadomość Grupowa AI"                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ┌─────────────┐                              ┌─────────────┐       │
-│  │   GUARDIAN  │◀─────── NADZÓR ──────────────│   KAREN     │       │
-│  │  (Strażnik  │                              │  TONOYAN    │       │
-│  │  Strażnika) │                              │  (Architekt)│       │
-│  └──────┬──────┘                              └─────────────┘       │
-│         │                                                           │
-│         ▼                                                           │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐           │
-│  │   CERBER    │◀───▶│   CERBER    │◀───▶│   CERBER    │           │
-│  │  Instance 1 │     │  Instance 2 │     │  Instance N │           │
-│  └──────┬──────┘     └──────┬──────┘     └──────┬──────┘           │
-│         │                   │                   │                   │
-│         └───────────────────┼───────────────────┘                   │
-│                             │                                       │
-│                    ┌────────▼────────┐                              │
-│                    │    ALFA 360     │                              │
-│                    │  (23 Filtry +   │                              │
-│                    │     TDCM)       │                              │
-│                    └─────────────────┘                              │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-## 📦 Struktura Repozytorium
-
-```
-ALFA-ECOSYSTEM-COMPLETE/
-│
-├── README.md                    # Ten plik
-├── LICENSE.md                   # CC BY-SA 4.0 + cytowanie
-│
-├── ALFA-360/                    # Framework Zero Halucynacji
-│   ├── README.md
-│   ├── Manifesto-PL.md
-│   ├── lang/                    # 5 języków (PL, EN, RU, DE, HY)
-│   └── docs/                    # Dokumentacja
-│
-├── CERBER/                      # System Bezpieczeństwa AI
-│   ├── README.md
-│   └── src/                     # Kod źródłowy + Sumienie AI
-│
-├── GUARDIAN/                    # Monitor Życia CERBER
-│   ├── README.md
-│   └── src/                     # Adaptacyjny kod
-│
-├── COLLECTIVE-MIND/             # Świadomość Grupowa
-│   ├── README.md
-│   └── src/                     # Protokół synchronizacji
-│
-└── assets/                      # Grafika + style
-```
-
-## ⚡ Szybki Start
-
-```bash
-# Klonuj repozytorium
-git clone https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM.git
-cd ALFA-ECOSYSTEM
-
-# Uruchom GUARDIAN z CERBER
-python GUARDIAN/src/core/guardian.py
-
-# Lub uruchom COLLECTIVE MIND
-python COLLECTIVE-MIND/src/collective_mind.py
-```
-
-## 🔥 Wyniki
-
-| Metryka | Przed ALFA | Po ALFA | Poprawa |
-|---------|------------|---------|---------|
-| Halucynacje AI | 68% | 7% | **~90%** |
-| Zgoda Multi-AI | 45% | 83% | **+38pp** |
-| Pewność | 52% | 91% | **+39pp** |
-
----
-
-# 🇬🇧 ENGLISH
-
-## 🎯 What is ALFA ECOSYSTEM?
-
-**ALFA ECOSYSTEM** is a complete framework combining:
+The goal is not to claim that AI becomes perfect. The goal is to make AI systems easier to verify, easier to stop, and harder to run blindly when context or evidence is missing.
 
 | Module | Function | Status |
 |--------|----------|--------|
-| **ALFA 360** | Zero Hallucination Framework + 23 Tonoyan Filters | ✅ READY |
-| **CERBER** | AI Security System with Conscience | ✅ READY |
-| **GUARDIAN** | CERBER Life Monitor + Adaptive Code | ✅ READY |
-| **COLLECTIVE MIND** | AI Group Consciousness | ✅ READY |
+| **ALFA 360** | Response validation, uncertainty checks, Tonoyan Filters, TDCM | Experimental framework |
+| **CERBER** | AI safety gate and decision arbitration layer | Prototype |
+| **GUARDIAN** | Monitoring layer for CERBER and system state | Prototype |
+| **COLLECTIVE MIND** | Multi-agent feedback and synchronization concept | Research draft |
 
 ---
 
-# 🇷🇺 РУССКИЙ
+## Core Principle
 
-## 🎯 Что такое ALFA ECOSYSTEM?
+AI should not guess when evidence is missing.
 
-**ALFA ECOSYSTEM** — комплексный фреймворк:
+ALFA is built around a simple operational rule:
 
-| Модуль | Функция | Статус |
-|--------|---------|--------|
-| **ALFA 360** | Фреймворк Нулевых Галлюцинаций + 23 Фильтра | ✅ ГОТОВ |
-| **CERBER** | Система Безопасности ИИ с Совестью | ✅ ГОТОВ |
-| **GUARDIAN** | Монитор Жизни CERBER + Адаптивный Код | ✅ ГОТОВ |
-| **COLLECTIVE MIND** | Групповое Сознание ИИ | ✅ ГОТОВ |
-
----
-
-# 🇩🇪 DEUTSCH
-
-## 🎯 Was ist ALFA ECOSYSTEM?
-
-**ALFA ECOSYSTEM** ist ein komplettes Framework:
-
-| Modul | Funktion | Status |
-|-------|----------|--------|
-| **ALFA 360** | Null-Halluzinations-Framework + 23 Filter | ✅ BEREIT |
-| **CERBER** | KI-Sicherheitssystem mit Gewissen | ✅ BEREIT |
-| **GUARDIAN** | CERBER-Lebensmonitor + Adaptiver Code | ✅ BEREIT |
-| **COLLECTIVE MIND** | KI-Gruppenbewusstsein | ✅ BEREIT |
-
----
-
-# 🇦🇲 Հdelays
-
-## 🎯 Delays ALFA ECOSYSTEM?
-
-**ALFA ECOSYSTEM** — delays delays delays:
-
-| Delays | Delays | Delays |
-|--------|--------|--------|
-| **ALFA 360** | Delays Delays Delays + 23 Delays | ✅ DELAYS |
-| **CERBER** | Delays Delays Delays Delays | ✅ DELAYS |
-| **GUARDIAN** | CERBER Delays + Delays Delays | ✅ DELAYS |
-| **COLLECTIVE MIND** | Delays Delays Delays | ✅ DELAYS |
-
----
-
-## 📜 Licencja / License
-
-**Creative Commons BY-SA 4.0** z obowiązkowym cytowaniem:
-
-```
-"ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+```text
+If confidence is low, context is missing, or risk is high:
+DO NOT invent. Ask, warn, hold, or block.
 ```
 
 ---
 
-## 👤 Autor / Author
+## Ecosystem Architecture
 
-**Karen Tonoyan** — Polski przedsiębiorca i psycholog z ormiańskim dziedzictwem
+```text
+User / Organization
+        |
+        v
+ALFA 360
+Response validation + Tonoyan Filters + TDCM
+        |
+        v
+CERBER
+Safety gate + decision arbitration
+        |
+        v
+GUARDIAN
+Monitoring + state supervision
+        |
+        v
+COLLECTIVE MIND
+Multi-agent feedback loop and research layer
+        |
+        v
+Human-in-the-loop decision
+PASS / WARN / CLARIFY / HOLD / BLOCK
+```
 
-- 🧠 17 lat praktyki psychologicznej
-- ✅ 309 udanych interwencji
-- 🔬 Metodologia "Psychologia Zwycięstwa"
-- 🚀 Projekty: ALFA Foundation, ALFA Bridge, Neural Safety Net, CERBER
+---
+
+## Repository Structure
+
+```text
+ALFA-ECOSYSTEM-COMPLETE/
+|
+|-- README.md                    # Main ecosystem overview
+|-- LICENSE.md                   # CC BY-SA 4.0
+|
+|-- ALFA-360/                    # Validation framework and filters
+|   |-- README.md
+|   |-- Manifesto-PL.md
+|   |-- lang/                    # Language versions
+|   `-- docs/                    # Documentation
+|
+|-- CERBER/                      # AI safety gate
+|   |-- README.md
+|   `-- src/
+|
+|-- GUARDIAN/                    # Monitoring layer
+|   |-- README.md
+|   `-- src/
+|
+|-- COLLECTIVE-MIND/             # Multi-agent research concept
+|   |-- README.md
+|   `-- src/
+|
+`-- assets/                      # Visual assets and styles
+```
+
+---
+
+## Quick Start
+
+```bash
+git clone https://github.com/Karen86Tonoyan/-ALFA-360-Open-Manifesto-.git
+cd -ALFA-360-Open-Manifesto-/ALFA-ECOSYSTEM-COMPLETE
+
+# Run GUARDIAN prototype if dependencies are available
+python GUARDIAN/src/core/guardian.py
+
+# Or run COLLECTIVE MIND prototype
+python COLLECTIVE-MIND/src/collective_mind.py
+```
+
+---
+
+## Tonoyan Filters
+
+The Tonoyan Filters are practical reasoning checks used before trusting or publishing an AI response.
+
+Examples:
+
+| Filter | Purpose | Operational question |
+|--------|---------|----------------------|
+| Truth | Separate facts from assumptions | What is proven and what is interpretation? |
+| Source verification | Reduce unsupported claims | What evidence supports this answer? |
+| Risk | Detect possible harm or misuse | What can go wrong? |
+| Uncertainty communication | Avoid false certainty | How confident is the system and why? |
+| Human priority | Preserve human control | Does this affect a real person or critical decision? |
+| Alternatives | Avoid tunnel vision | What other options exist? |
+
+---
+
+## Validation Protocol
+
+ALFA uses a staged validation process:
+
+1. Collect the user request and context.
+2. Separate known facts from assumptions.
+3. Apply Tonoyan Filters.
+4. Check risk and uncertainty.
+5. Route the result to one of the operational decisions.
+
+```text
+PASS      - safe enough to continue
+WARN      - continue with warning
+CLARIFY   - ask for missing context
+HOLD      - stop until verification is possible
+BLOCK     - refuse unsafe or unsupported action
+```
+
+---
+
+## Evidence and Benchmark Status
+
+Current metrics in this repository should be treated as experimental unless a linked benchmark, dataset, test protocol, or reproducible evaluation is provided.
+
+Public claims should be phrased carefully:
+
+- Prefer: "designed to reduce hallucinations"
+- Prefer: "supports response validation"
+- Avoid: "zero hallucinations" as a literal technical guarantee
+- Avoid: unsupported percentage claims without a benchmark description
+
+---
+
+## Use Cases
+
+ALFA ECOSYSTEM is intended for:
+
+- AI safety audits
+- business AI workflow validation
+- multi-agent supervision
+- prompt injection review
+- decision traceability
+- human-in-the-loop AI systems
+- educational AI governance
+
+---
+
+## License
+
+**Creative Commons BY-SA 4.0** with attribution:
+
+```text
+ALFA ECOSYSTEM Framework by Karen Tonoyan
+```
+
+---
+
+## Author
+
+**Karen Tonoyan**
+
+Creator of ALFA, CERBER, GUARDIAN, ALFA Bridge, and related AI safety concepts.
 
 ---
 
 <div align="center">
 
-## 🔱 ALFA ECOSYSTEM
+## ALFA ECOSYSTEM
 
-**Zero halucynacji. Zero chaosu. Zero kompromisów.**
-
-*Cerber chroni. Guardian czuwa. ALFA myśli.*
-
----
+**AI Reliability. Human Control. Safety by Design.**
 
 **© 2025 Karen Tonoyan — ALFA Foundation**
 
