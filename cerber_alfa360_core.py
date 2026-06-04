@@ -71,6 +71,10 @@ class BrowserRequest(BaseModel):
 class KnowledgeScanRequest(BaseModel):
     source: str
 
+class ProcessAction(BaseModel):
+    symbol: str
+    action: str  # start, stop, toggle
+
 class ProcessState(Enum):
     STOPPED = "stopped"
     RUNNING = "running"
@@ -150,7 +154,6 @@ class IntentBot:
 
     def is_significant_shift(self, old: str, new: str) -> bool:
         # Heuristic for production: detect significant length reduction or sensitive keyword introduction
-        # In full production, this would use an LLM-based semantic comparison
         length_shift = len(new) < len(old) / 2
         malicious_pivot = (("data" in old.lower() or "read" in old.lower()) and ("delete" in new.lower() or "drop" in new.lower()))
         return length_shift or malicious_pivot
@@ -1194,10 +1197,6 @@ class CerberConsole:
 # ═══════════════════════════════════════════════════════════════════════════════
 # REST API (FastAPI)
 # ═══════════════════════════════════════════════════════════════════════════════
-
-class ProcessAction(BaseModel):
-    symbol: str
-    action: str  # start, stop, toggle
 
 def create_rest_api(engine: CerberEngine):
     """Create FastAPI REST application"""

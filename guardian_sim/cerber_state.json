@@ -1,13 +1,13 @@
 {
   "engine": {
     "running": true,
-    "start_time": "2026-06-03T23:55:39.157128",
-    "uptime_seconds": 0.012289,
+    "start_time": "2026-06-04T00:13:03.225349",
+    "uptime_seconds": 150.030309,
     "root_path": "/app/guardian_sim",
-    "message_queue_size": 11,
+    "message_queue_size": 355,
     "system_metrics": {
-      "cpu_usage": 100.0,
-      "memory_usage": 8.0
+      "cpu_usage": 2.5,
+      "memory_usage": 5.2
     }
   },
   "knox": {
@@ -17,7 +17,7 @@
     "knox_enabled": false,
     "secure_folder_available": false,
     "attestation_status": "not_applicable",
-    "timestamp": "2026-06-03T23:55:39.172171"
+    "timestamp": "2026-06-04T00:15:33.255917"
   },
   "whisper": {
     "processed_count": 0,
@@ -26,9 +26,12 @@
     "filters_active": 15
   },
   "knowledge_graph": {
-    "sources": [],
-    "last_scan": null,
-    "entities": 0
+    "sources": [
+      "Google Drive",
+      "Samsung Notes"
+    ],
+    "last_scan": "2026-06-04T00:13:11.412658",
+    "entities": 39
   },
   "processes": {
     "\u7532": {
@@ -36,10 +39,10 @@
       "name": "system_monitor",
       "description": "\u7cfb\u7edf\u76d1\u63a7 - Kernel & system state monitoring",
       "state": "running",
-      "last_log": "\u626b\u63cf\u7cfb\u7edf\u5185\u6838 (Kernel scan) - CPU: 100.0% ... OK",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.157653",
-      "uptime_seconds": 0.014537,
+      "last_log": "\u626b\u63cf\u7cfb\u7edf\u5185\u6838 (Kernel scan) - CPU: 0.0% ... OK",
+      "log_count": 50,
+      "start_time": "2026-06-04T00:13:03.226838",
+      "uptime_seconds": 150.029097,
       "error_count": 0
     },
     "\u4e59": {
@@ -47,10 +50,10 @@
       "name": "guardian_watchdog",
       "description": "\u5b88\u62a4\u8005 - Guardian watchdog with SHA256 tokens",
       "state": "running",
-      "last_log": "\u5b88\u62a4\u7ebf\u7a0b\u8fd0\u884c\u4e2d (Guardian active) \u2013 token=ca769d8dcc18e1ff",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.158859",
-      "uptime_seconds": 0.013338,
+      "last_log": "\u5b88\u62a4\u7ebf\u7a0b\u8fd0\u884c\u4e2d (Guardian active) \u2013 token=428d0d60dbdb61bd",
+      "log_count": 31,
+      "start_time": "2026-06-04T00:13:03.229758",
+      "uptime_seconds": 150.026183,
       "error_count": 0
     },
     "\u4e19": {
@@ -58,10 +61,10 @@
       "name": "memory_scan",
       "description": "\u5185\u5b58\u626b\u63cf - Memory usage analyzer",
       "state": "running",
-      "last_log": "\u5185\u5b58\u68c0\u67e5: \u4f7f\u7528\u7387 8.0% \u2713 OK",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.160049",
-      "uptime_seconds": 0.012153,
+      "last_log": "\u5185\u5b58\u68c0\u67e5: \u4f7f\u7528\u7387 5.2% \u2713 OK",
+      "log_count": 38,
+      "start_time": "2026-06-04T00:13:03.231588",
+      "uptime_seconds": 150.024358,
       "error_count": 0
     },
     "\u4e01": {
@@ -70,9 +73,9 @@
       "description": "\u6e05\u7406\u6a21\u62df - Cache purge simulation",
       "state": "running",
       "last_log": "\u6a21\u62df\u6e05\u7406\u7f13\u5b58... \u5b8c\u6210 (Wipe simulation complete)",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.160799",
-      "uptime_seconds": 0.011407,
+      "log_count": 16,
+      "start_time": "2026-06-04T00:13:03.232643",
+      "uptime_seconds": 150.023307,
       "error_count": 0
     },
     "\u620a": {
@@ -80,10 +83,10 @@
       "name": "network_trace",
       "description": "\u7f51\u7edc\u8ffd\u8e2a - Network packet monitoring",
       "state": "running",
-      "last_log": "\u7f51\u7edc\u6d41\u91cf\u76d1\u63a7: 49 \u5305\u6355\u83b7 (packets)",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.161622",
-      "uptime_seconds": 0.010588,
+      "last_log": "\u7f51\u7edc\u6d41\u91cf\u76d1\u63a7: 11 \u5305\u6355\u83b7 (packets)",
+      "log_count": 26,
+      "start_time": "2026-06-04T00:13:03.233193",
+      "uptime_seconds": 150.02276,
       "error_count": 0
     },
     "\u5df1": {
@@ -91,10 +94,10 @@
       "name": "integrity_check",
       "description": "\u5b8c\u6574\u6027\u68c0\u67e5 - File integrity verification",
       "state": "running",
-      "last_log": "\u5b8c\u6574\u6027\u9a8c\u8bc1 (Integrity check) \u2013 md5=1d8ebd0b64975c510d4fe7110d7f54d3",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.162262",
-      "uptime_seconds": 0.009952,
+      "last_log": "\u5b8c\u6574\u6027\u9a8c\u8bc1 (Integrity check) \u2013 md5=58cbdc33226c1939404c57d0f09bbeae",
+      "log_count": 19,
+      "start_time": "2026-06-04T00:13:03.233731",
+      "uptime_seconds": 150.022226,
       "error_count": 0
     },
     "\u5e9a": {
@@ -103,9 +106,9 @@
       "description": "Knox\u68c0\u6d4b - Samsung Knox status monitor",
       "state": "running",
       "last_log": "Knox\u68c0\u6d4b: simulated | Knox vN/A",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.163659",
-      "uptime_seconds": 0.008558,
+      "log_count": 11,
+      "start_time": "2026-06-04T00:13:03.234970",
+      "uptime_seconds": 150.020991,
       "error_count": 0
     },
     "\u8f9b": {
@@ -113,10 +116,10 @@
       "name": "alfa_bridge_sync",
       "description": "ALFA\u540c\u6b65 - Bridge synchronization",
       "state": "running",
-      "last_log": "ALFA\u540c\u6b65: 6 messages queued | Bridge: CONNECTED",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.164538",
-      "uptime_seconds": 0.007683,
+      "last_log": "ALFA\u540c\u6b65: 345 messages queued | Bridge: CONNECTED",
+      "log_count": 22,
+      "start_time": "2026-06-04T00:13:03.235987",
+      "uptime_seconds": 150.019978,
       "error_count": 0
     },
     "\u58ec": {
@@ -125,9 +128,9 @@
       "description": "\u4f4e\u8bed\u8fc7\u6ee4 - Whisper perception filter",
       "state": "running",
       "last_log": "\u4f4e\u8bed\u8fc7\u6ee4: processed=0 | threats=0",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.165111",
-      "uptime_seconds": 0.007113,
+      "log_count": 31,
+      "start_time": "2026-06-04T00:13:03.236393",
+      "uptime_seconds": 150.019576,
       "error_count": 0
     },
     "\u7678": {
@@ -135,10 +138,10 @@
       "name": "threat_analyzer",
       "description": "\u5a01\u80c1\u5206\u6790 - Real-time threat assessment",
       "state": "running",
-      "last_log": "\u5a01\u80c1\u5206\u6790: Level 0 \ud83d\udfe2 | Scanning...",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.165887",
-      "uptime_seconds": 0.006341,
+      "last_log": "\u5a01\u80c1\u5206\u6790: Level 1 \ud83d\udfe1 | Scanning...",
+      "log_count": 38,
+      "start_time": "2026-06-04T00:13:03.237762",
+      "uptime_seconds": 150.018211,
       "error_count": 0
     },
     "\u91d1": {
@@ -146,10 +149,10 @@
       "name": "crypto_guardian",
       "description": "\u52a0\u5bc6\u5b88\u62a4 - Cryptographic operations",
       "state": "running",
-      "last_log": "\u52a0\u5bc6\u5b88\u62a4: AES-256-GCM active | Key rotation: 42924f2b60cee94235a3a2d290c42681",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.166670",
-      "uptime_seconds": 0.005562,
+      "last_log": "\u52a0\u5bc6\u5b88\u62a4: AES-256-GCM active | Key rotation: 7d136492f686b5b121af64e6cf327ff3",
+      "log_count": 8,
+      "start_time": "2026-06-04T00:13:03.238425",
+      "uptime_seconds": 150.017551,
       "error_count": 0
     },
     "\u6728": {
@@ -157,10 +160,10 @@
       "name": "log_aggregator",
       "description": "\u65e5\u5fd7\u805a\u5408 - Centralized log collector",
       "state": "running",
-      "last_log": "",
-      "log_count": 0,
-      "start_time": "2026-06-03T23:55:39.167580",
-      "uptime_seconds": 0.004656,
+      "last_log": "\u65e5\u5fd7\u805a\u5408: 16 files | 383 total entries",
+      "log_count": 13,
+      "start_time": "2026-06-04T00:13:03.239283",
+      "uptime_seconds": 150.016697,
       "error_count": 0
     },
     "\u6c34": {
@@ -168,10 +171,10 @@
       "name": "flow_controller",
       "description": "\u6d41\u91cf\u63a7\u5236 - Data flow management",
       "state": "running",
-      "last_log": "\u6d41\u91cf\u63a7\u5236: 12/15 processes active",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.168334",
-      "uptime_seconds": 0.003906,
+      "last_log": "\u6d41\u91cf\u63a7\u5236: 15/15 processes active",
+      "log_count": 19,
+      "start_time": "2026-06-04T00:13:03.241597",
+      "uptime_seconds": 150.014387,
       "error_count": 0
     },
     "\u706b": {
@@ -180,9 +183,9 @@
       "description": "\u8b66\u62a5\u5206\u53d1 - Alert notification system",
       "state": "running",
       "last_log": "\u8b66\u62a5\u5206\u53d1: 0 alerts pending | Dispatch: READY",
-      "log_count": 1,
-      "start_time": "2026-06-03T23:55:39.169029",
-      "uptime_seconds": 0.003214,
+      "log_count": 26,
+      "start_time": "2026-06-04T00:13:03.242650",
+      "uptime_seconds": 150.013338,
       "error_count": 0
     },
     "\u571f": {
@@ -190,12 +193,12 @@
       "name": "state_persistence",
       "description": "\u72b6\u6001\u6301\u4e45\u5316 - State backup & recovery",
       "state": "running",
-      "last_log": "",
-      "log_count": 0,
-      "start_time": "2026-06-03T23:55:39.169677",
-      "uptime_seconds": 0.00257,
+      "last_log": "\u72b6\u6001\u6301\u4e45\u5316: State saved | Size: 6934 bytes",
+      "log_count": 5,
+      "start_time": "2026-06-04T00:13:03.243232",
+      "uptime_seconds": 150.012759,
       "error_count": 0
     }
   },
-  "timestamp": "2026-06-03T23:55:39.172249"
+  "timestamp": "2026-06-04T00:15:33.255993"
 }
