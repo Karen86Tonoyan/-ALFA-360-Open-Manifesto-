@@ -1,19 +1,26 @@
 # ALFA ECOSYSTEM - Requirements
 # Author: Karen Tonoyan
-# Version: 1.0
+# Version: 1.1.0
 
 # Core
 python-dateutil>=2.8.0
+psutil>=5.9.0
+pydantic>=2.0.0
+
+# AI & API
+openai>=1.0.0
+anthropic>=0.18.0
+fastapi>=0.100.0
+uvicorn>=0.20.0
+websockets>=11.0
 
 # Optional - for Telegram Bot
 python-telegram-bot>=20.0
 
-# Optional - for AI APIs
-openai>=1.0.0
-anthropic>=0.18.0
-
-# Optional - for web interface
+# Optional - for web interface (ALFA-BRIDGE)
 flask>=2.0.0
+flask-socketio>=5.0.0
 
-# Development
+# Development & Testing
 pytest>=7.0.0
+playwright>=1.35.0

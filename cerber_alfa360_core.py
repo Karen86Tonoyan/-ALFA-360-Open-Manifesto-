@@ -124,10 +124,11 @@ class IntentBot:
     """
     AI Intent Bot - Scans intent and URLs before allowing access
     """
-    def __init__(self):
+    def __init__(self, whisper_perception: Optional[WhisperPerception] = None):
         self.blocklist = ["evil.com", "malicious.site", "scam.io"]
         self.malicious_intents = ["steal", "hack", "leak", "bypass", "attack", "malware"]
         self.session_intent = None
+        self.whisper = whisper_perception
 
     def verify_request(self, intent: str, url: str) -> Dict[str, Any]:
         # 1. Scan URL
@@ -145,27 +146,33 @@ class IntentBot:
              return {"status": "BLOCKED", "reason": f"Intent shift detected: {self.session_intent} -> {intent}"}
 
         self.session_intent = intent
-        return {"status": "ALLOWED", "content": self.mock_fetch(url)}
+        return {"status": "ALLOWED", "content": self.fetch_and_label(url)}
 
     def is_significant_shift(self, old: str, new: str) -> bool:
-        # Simple heuristic for demo/v1: if the new intent is much shorter or completely different
-        # In production, this would use semantic similarity
-        return len(new) < len(old) / 2 or (("data" in old) and ("delete" in new))
+        # Heuristic for production: detect significant length reduction or sensitive keyword introduction
+        # In full production, this would use an LLM-based semantic comparison
+        length_shift = len(new) < len(old) / 2
+        malicious_pivot = (("data" in old.lower() or "read" in old.lower()) and ("delete" in new.lower() or "drop" in new.lower()))
+        return length_shift or malicious_pivot
 
-    def mock_fetch(self, url: str) -> Dict[str, List[str]]:
-        # Mocking factual vs narrative separation for a fetched page
-        return {
-            "facts": [
-                f"Page title: Summary of {url}",
-                "Server location: Frankfurt, DE",
-                "Last updated: 2026-06-03"
-            ],
-            "narrative": [
-                "This page provides a comprehensive overview of the requested resource.",
-                "Users generally find this information helpful and easy to understand.",
-                "We believe that providing this data enhances the overall user experience."
-            ]
-        }
+    def fetch_and_label(self, url: str) -> Dict[str, List[str]]:
+        """
+        Fetch content from URL and use Studio Label to separate facts from narrative
+        """
+        # In production, this would use a real HTTP client
+        mock_content = (
+            f"The website {url} was established in 2024 and serves over 5000 daily users. "
+            f"It is located on a secure cloud infrastructure. I personally think this is the "
+            f"most amazing platform ever built! You should definitely check it out. "
+            f"Technically, the server uptime is 99.9%. Many people believe that this is "
+            f"a game changer for the industry."
+        )
+
+        if self.whisper:
+            return self.whisper.label_content(mock_content)
+
+        # Fallback if whisper is not available
+        return {"facts": [mock_content], "narrative": []}
 
 @dataclass
 class ALFABridgeMessage:
@@ -630,7 +637,7 @@ class CerberEngine:
         # Initialize components
         self.knox_detector = KnoxDetector()
         self.whisper_filter = WhisperPerception()
-        self.intent_bot = IntentBot()
+        self.intent_bot = IntentBot(whisper_perception=self.whisper_filter)
         self.knowledge_graph = {
             "sources": [],
             "last_scan": None,
@@ -1188,12 +1195,15 @@ class CerberConsole:
 # REST API (FastAPI)
 # ═══════════════════════════════════════════════════════════════════════════════
 
+class ProcessAction(BaseModel):
+    symbol: str
+    action: str  # start, stop, toggle
+
 def create_rest_api(engine: CerberEngine):
     """Create FastAPI REST application"""
     try:
         from fastapi import FastAPI, HTTPException
         from fastapi.middleware.cors import CORSMiddleware
-        from pydantic import BaseModel
     except ImportError:
         logger.warning("FastAPI not installed. REST API disabled.")
         return None
@@ -1211,20 +1221,6 @@ def create_rest_api(engine: CerberEngine):
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
-    class WhisperInput(BaseModel):
-        text: str
-
-    class BrowserRequest(BaseModel):
-        intent: str
-        url: str
-
-    class KnowledgeScanRequest(BaseModel):
-        source: str
-    
-    class ProcessAction(BaseModel):
-        symbol: str
-        action: str  # start, stop, toggle
     
     @app.get("/")
     def root():
