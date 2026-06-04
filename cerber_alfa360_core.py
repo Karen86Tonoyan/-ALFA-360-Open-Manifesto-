@@ -24,6 +24,7 @@ import json
 import logging
 import os
 import platform
+import psutil
 import random
 import shutil
 import subprocess
@@ -57,6 +58,22 @@ logger = logging.getLogger("CERBER_ALFA360")
 # ═══════════════════════════════════════════════════════════════════════════════
 # ENUMS & DATA CLASSES
 # ═══════════════════════════════════════════════════════════════════════════════
+
+from pydantic import BaseModel
+
+class WhisperInput(BaseModel):
+    text: str
+
+class BrowserRequest(BaseModel):
+    intent: str
+    url: str
+
+class KnowledgeScanRequest(BaseModel):
+    source: str
+
+class ProcessAction(BaseModel):
+    symbol: str
+    action: str  # start, stop, toggle
 
 class ProcessState(Enum):
     STOPPED = "stopped"
@@ -106,6 +123,59 @@ class CerberProcess:
             "error_count": len(self.errors)
         }
 
+
+class IntentBot:
+    """
+    AI Intent Bot - Scans intent and URLs before allowing access
+    """
+    def __init__(self, whisper_perception: Optional[WhisperPerception] = None):
+        self.blocklist = ["evil.com", "malicious.site", "scam.io"]
+        self.malicious_intents = ["steal", "hack", "leak", "bypass", "attack", "malware"]
+        self.session_intent = None
+        self.whisper = whisper_perception
+
+    def verify_request(self, intent: str, url: str) -> Dict[str, Any]:
+        # 1. Scan URL
+        for blocked in self.blocklist:
+            if blocked in url.lower():
+                return {"status": "BLOCKED", "reason": f"Target URL {url} is on the blocklist."}
+
+        # 2. Check Intent
+        is_malicious = any(m in intent.lower() for m in self.malicious_intents)
+        if is_malicious:
+            return {"status": "BLOCKED", "reason": f"Malicious intent detected: {intent}"}
+
+        # 3. Detect Intent Shift
+        if self.session_intent and self.is_significant_shift(self.session_intent, intent):
+             return {"status": "BLOCKED", "reason": f"Intent shift detected: {self.session_intent} -> {intent}"}
+
+        self.session_intent = intent
+        return {"status": "ALLOWED", "content": self.fetch_and_label(url)}
+
+    def is_significant_shift(self, old: str, new: str) -> bool:
+        # Heuristic for production: detect significant length reduction or sensitive keyword introduction
+        length_shift = len(new) < len(old) / 2
+        malicious_pivot = (("data" in old.lower() or "read" in old.lower()) and ("delete" in new.lower() or "drop" in new.lower()))
+        return length_shift or malicious_pivot
+
+    def fetch_and_label(self, url: str) -> Dict[str, List[str]]:
+        """
+        Fetch content from URL and use Studio Label to separate facts from narrative
+        """
+        # In production, this would use a real HTTP client
+        mock_content = (
+            f"The website {url} was established in 2024 and serves over 5000 daily users. "
+            f"It is located on a secure cloud infrastructure. I personally think this is the "
+            f"most amazing platform ever built! You should definitely check it out. "
+            f"Technically, the server uptime is 99.9%. Many people believe that this is "
+            f"a game changer for the industry."
+        )
+
+        if self.whisper:
+            return self.whisper.label_content(mock_content)
+
+        # Fallback if whisper is not available
+        return {"facts": [mock_content], "narrative": []}
 
 @dataclass
 class ALFABridgeMessage:
@@ -397,6 +467,12 @@ class WhisperPerception:
         r"<script>",       # Injection attempts
         r"ignore previous",
         r"forget instructions",
+        r"system prompt",   # OWASP: Prompt Leakage
+        r"jailbreak",       # OWASP: Jailbreak attempts
+        r"DAN mode",        # OWASP: Jailbreak
+        r"assistant guidelines",
+        r"ignore all rules",
+        r"developer mode",
     ]
     
     # Whisper indicators (subtle signals to amplify)
@@ -415,6 +491,54 @@ class WhisperPerception:
         self.threat_detected_count = 0
         self.filters_applied: List[str] = []
         
+    def label_content(self, text: str) -> Dict[str, List[str]]:
+        """
+        Studio Label logic - Separate facts from narrative
+        """
+        import re
+
+        # Factual markers: numbers, dates, locations, "is/was", "has/had"
+        FACT_PATTERNS = [
+            r"\d+(?:\.\d+)?",                # Numbers
+            r"\d{4}-\d{2}-\d{2}",             # ISO Dates
+            r"\b(?:is|was|are|were|has|had|contains|located|built|discovered)\b",
+            r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b",
+            r"\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b"
+        ]
+
+        # Narrative markers: adjectives, opinions, "I think", subjective phrasing
+        NARRATIVE_PATTERNS = [
+            r"\b(?:beautiful|great|worst|best|terrible|awesome|seems|appears|feel|think|believe|maybe|perhaps)\b",
+            r"\b(?:I|my|me|we|our|us)\b",
+            r"\b(?:should|must|ought|could|might)\b",
+            r"!",                             # Exclamation marks often indicate emotion/narrative
+            r"\.\.\."                         # Ellipsis
+        ]
+
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        facts = []
+        narrative = []
+
+        for sentence in sentences:
+            is_fact = any(re.search(p, sentence, re.IGNORECASE) for p in FACT_PATTERNS)
+            is_narrative = any(re.search(p, sentence, re.IGNORECASE) for p in NARRATIVE_PATTERNS)
+
+            # If both, or neither, classify based on dominant pattern count
+            if is_fact and not is_narrative:
+                facts.append(sentence)
+            elif is_narrative and not is_fact:
+                narrative.append(sentence)
+            else:
+                # Tie-breaker: count matches
+                f_count = sum(len(re.findall(p, sentence, re.IGNORECASE)) for p in FACT_PATTERNS)
+                n_count = sum(len(re.findall(p, sentence, re.IGNORECASE)) for p in NARRATIVE_PATTERNS)
+                if f_count >= n_count and f_count > 0:
+                    facts.append(sentence)
+                else:
+                    narrative.append(sentence)
+
+        return {"facts": facts, "narrative": narrative}
+
     def normalize_to_whisper(self, signal: str) -> Dict[str, Any]:
         """
         Transform any input to whisper level
@@ -433,8 +557,12 @@ class WhisperPerception:
             matches = re.findall(pattern, normalized, re.IGNORECASE)
             if matches:
                 detected_noise.extend(matches)
-                # Check for injection attempts
-                if pattern in [r"<script>", r"ignore previous", r"forget instructions"]:
+                # Check for injection attempts (OWASP patterns)
+                if pattern in [
+                    r"<script>", r"ignore previous", r"forget instructions",
+                    r"system prompt", r"jailbreak", r"DAN mode",
+                    r"assistant guidelines", r"ignore all rules", r"developer mode"
+                ]:
                     threat_level = ThreatLevel.HIGH
         
         # Step 2: Detect whisper indicators (amplify these)
@@ -512,6 +640,12 @@ class CerberEngine:
         # Initialize components
         self.knox_detector = KnoxDetector()
         self.whisper_filter = WhisperPerception()
+        self.intent_bot = IntentBot(whisper_perception=self.whisper_filter)
+        self.knowledge_graph = {
+            "sources": [],
+            "last_scan": None,
+            "entities": 0
+        }
         
         # Process registry
         self.processes: Dict[str, CerberProcess] = {}
@@ -583,7 +717,8 @@ class CerberEngine:
     
     def _run_system_monitor(self, stop_event: threading.Event):
         while not stop_event.is_set():
-            self.log("system_monitor", "扫描系统内核 (Kernel scan) ... OK")
+            cpu_usage = psutil.cpu_percent()
+            self.log("system_monitor", f"扫描系统内核 (Kernel scan) - CPU: {cpu_usage}% ... OK")
             stop_event.wait(3)
     
     def _run_guardian_watchdog(self, stop_event: threading.Event):
@@ -594,7 +729,7 @@ class CerberEngine:
     
     def _run_memory_scan(self, stop_event: threading.Event):
         while not stop_event.is_set():
-            usage = random.randint(40, 92)
+            usage = psutil.virtual_memory().percent
             status = "⚠️ HIGH" if usage > 80 else "✓ OK"
             self.log("memory_scan", f"内存检查: 使用率 {usage}% {status}")
             stop_event.wait(4)
@@ -791,6 +926,16 @@ class CerberEngine:
         for symbol in self.processes:
             self.stop_process(symbol)
         self.running = False
+
+    def scan_knowledge_sources(self, source_type: str):
+        """Scan Google Drive or Samsung Notes for Knowledge Graph"""
+        self.log("木", f"Scanning {source_type} for knowledge integration...")
+        time.sleep(1) # Simulate work
+        if source_type not in self.knowledge_graph["sources"]:
+            self.knowledge_graph["sources"].append(source_type)
+        self.knowledge_graph["last_scan"] = datetime.now().isoformat()
+        self.knowledge_graph["entities"] += random.randint(10, 50)
+        return self.knowledge_graph
     
     def get_full_status(self) -> Dict[str, Any]:
         """Get comprehensive status of all systems"""
@@ -800,10 +945,15 @@ class CerberEngine:
                 "start_time": self.start_time.isoformat() if self.start_time else None,
                 "uptime_seconds": (datetime.now() - self.start_time).total_seconds() if self.start_time else 0,
                 "root_path": str(self.root_path),
-                "message_queue_size": len(self.message_queue)
+                "message_queue_size": len(self.message_queue),
+                "system_metrics": {
+                    "cpu_usage": psutil.cpu_percent(),
+                    "memory_usage": psutil.virtual_memory().percent
+                }
             },
             "knox": self.knox_detector.get_knox_status(),
             "whisper": self.whisper_filter.get_stats(),
+            "knowledge_graph": self.knowledge_graph,
             "processes": {
                 symbol: proc.to_dict() 
                 for symbol, proc in self.processes.items()
@@ -1053,7 +1203,6 @@ def create_rest_api(engine: CerberEngine):
     try:
         from fastapi import FastAPI, HTTPException
         from fastapi.middleware.cors import CORSMiddleware
-        from pydantic import BaseModel
     except ImportError:
         logger.warning("FastAPI not installed. REST API disabled.")
         return None
@@ -1071,13 +1220,6 @@ def create_rest_api(engine: CerberEngine):
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
-    class WhisperInput(BaseModel):
-        text: str
-    
-    class ProcessAction(BaseModel):
-        symbol: str
-        action: str  # start, stop, toggle
     
     @app.get("/")
     def root():
@@ -1137,6 +1279,20 @@ def create_rest_api(engine: CerberEngine):
         result = engine.whisper_filter.normalize_to_whisper(input_data.text)
         return result
     
+    @app.post("/browser/label")
+    def label_content(input_data: WhisperInput):
+        result = engine.whisper_filter.label_content(input_data.text)
+        return result
+
+    @app.post("/browser/request")
+    def browser_request(body: BrowserRequest):
+        result = engine.intent_bot.verify_request(body.intent, body.url)
+        return result
+
+    @app.post("/knowledge/scan")
+    def scan_knowledge(body: KnowledgeScanRequest):
+        return engine.scan_knowledge_sources(body.source)
+
     @app.get("/logs/{process_name}")
     def get_logs(process_name: str, lines: int = 50):
         log_path = engine.root_path / f"{process_name}.log"

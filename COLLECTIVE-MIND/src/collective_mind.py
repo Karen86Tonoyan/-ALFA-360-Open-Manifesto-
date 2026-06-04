@@ -244,7 +244,36 @@ class AINode(CollectiveNode):
         super().__init__(f"AI_{ai_name.upper()}", f"AI ({ai_name})")
         self.ai_name = ai_name
         self.filters_active = 23  # Wszystkie filtry Tonoyona
+        self.knowledge_graph = {
+            "nodes": [],
+            "edges": [],
+            "sources": []
+        }
     
+    def scan_google_drive(self, folder_id: str):
+        """Simulate scanning Google Drive for Knowledge Graph"""
+        print(f"📂 [AI_{self.ai_name}] Scanning Google Drive folder: {folder_id}")
+        # In production, this would use Google Drive API
+        new_nodes = [
+            {"id": "doc_1", "label": "Project Alpha Strategy", "type": "document"},
+            {"id": "sheet_1", "label": "2025 Financial Projections", "type": "spreadsheet"}
+        ]
+        self.knowledge_graph["nodes"].extend(new_nodes)
+        self.knowledge_graph["sources"].append(f"google_drive://{folder_id}")
+        return len(new_nodes)
+
+    def scan_samsung_notes(self, account_id: str):
+        """Simulate scanning Samsung Notes for Knowledge Graph"""
+        print(f"📝 [AI_{self.ai_name}] Scanning Samsung Notes for account: {account_id}")
+        # In production, this would use Samsung Cloud/Notes API
+        new_nodes = [
+            {"id": "note_1", "label": "Psychology of Victory - Key Insights", "type": "note"},
+            {"id": "note_2", "label": "Cerber Implementation Details", "type": "note"}
+        ]
+        self.knowledge_graph["nodes"].extend(new_nodes)
+        self.knowledge_graph["sources"].append(f"samsung_notes://{account_id}")
+        return len(new_nodes)
+
     def process_pattern(self, pattern: LearningPattern) -> bool:
         """AI przetwarza wzorzec przez filtry / AI processes pattern through filters"""
         # Stosuj 23 filtry Tonoyona
@@ -588,6 +617,10 @@ if __name__ == "__main__":
     
     # Obudź
     mind.awaken()
+
+    # Skanuj źródła do Grafów Wiedzy
+    mind.ai.scan_google_drive("root_folder_001")
+    mind.ai.scan_samsung_notes("karen_tonoyan_notes")
     
     # Naucz wzorca (z lewej flanki)
     mind.learn({
