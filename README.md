@@ -1,4 +1,4 @@
-# Every CODE
+# Alfa EOS
 
 &ensp;
 
@@ -6,7 +6,7 @@
 
 &ensp;
 
-**Every Code** (Code for short) is a fast, local coding agent for your terminal. It's a community-driven fork of `openai/codex` focused on real developer ergonomics: Browser integration, multi-agents, theming, and reasoning control — all while staying compatible with upstream.
+**Alfa EOS** (powered by Every Code) is a fast, local coding agent for your terminal. It's a community-driven fork of `openai/codex` focused on real developer ergonomics: Browser integration, multi-agents, theming, and reasoning control — all while staying compatible with upstream.
 
 &ensp;
 ## What's new in v0.5.0 (November 21st 2025)
@@ -338,6 +338,12 @@ AI providers can change eligibility, limits, models, or authentication flows. Ev
 Apache 2.0 - See [LICENSE](LICENSE) file for details.
 
 Every Code is a community fork of the original Codex CLI. We maintain compatibility while adding enhanced features requested by the developer community.
+
+&ensp;
+
+### Private Repository
+
+For the private implementation and advanced features, please refer to the [Alfa EOS Private Repository](https://github.com/Karen86Tonoyan/Alfa-EOS-Private).
 
 &ensp;
 ---
