@@ -1,8 +1,8 @@
 """
-ALFA BRIDGE – moduł orkiestracji wielomodelowej AI w ekosystemie ALFA 360.
+ALFA BRIDGE – moduł orkiestracji wielomodelowej AI w ekosystemie Alfa EOS.
 
 Zintegrowane moduły:
-- ALFA 360 (Zero-Hallucination Framework)
+- Alfa EOS / Alfa EOS (Zero-Hallucination Framework)
 - CERBER (Security Core)
 - GUARDIAN (Life Monitor)
 - COLLECTIVE MIND (Synchronization Layer)

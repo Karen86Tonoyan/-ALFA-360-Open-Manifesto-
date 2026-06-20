@@ -20,7 +20,7 @@
 Każde użycie tego frameworka **MUSI** zawierać:
 
 ```
-"ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+"Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ### Co możesz:
@@ -37,7 +37,7 @@ Każde użycie tego frameworka **MUSI** zawierać:
 
 ### Chronione Marki:
 - ALFA 360
-- ALFA ECOSYSTEM
+- Alfa EOS
 - CERBER AI Conscience
 - GUARDIAN
 - ALFA COLLECTIVE MIND
@@ -55,7 +55,7 @@ Każde użycie tego frameworka **MUSI** zawierać:
 Every use of this framework **MUST** include:
 
 ```
-"ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+"Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ### You MAY:
@@ -79,7 +79,7 @@ Every use of this framework **MUST** include:
 Каждое использование **ДОЛЖНО** включать:
 
 ```
-«ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)»
+«Alfa EOS Framework by Karen Tonoyan (2025)»
 ```
 
 ---
@@ -91,7 +91,7 @@ Every use of this framework **MUST** include:
 Jede Nutzung **MUSS** enthalten:
 
 ```
-„ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+„Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ---
@@ -100,7 +100,7 @@ Jede Nutzung **MUSS** enthalten:
 
 ### APA Style:
 ```
-Tonoyan, K. (2025). ALFA ECOSYSTEM: Complete AI Security & Consciousness Framework. 
+Tonoyan, K. (2025). Alfa EOS: Complete AI Security & Consciousness Framework.
 ALFA Foundation. https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM
 ```
 
@@ -108,7 +108,7 @@ ALFA Foundation. https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM
 ```bibtex
 @misc{tonoyan2025alfa,
   author = {Tonoyan, Karen},
-  title = {ALFA ECOSYSTEM: Complete AI Security & Consciousness Framework},
+  title = {Alfa EOS: Complete AI Security & Consciousness Framework},
   year = {2025},
   publisher = {ALFA Foundation},
   url = {https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM}

@@ -1,6 +1,6 @@
 <div align="center">
 
-# ALFA ECOSYSTEM
+# Alfa EOS
 ### AI Reliability, Safety & Human-in-the-Loop Framework
 
 **Author:** Karen Tonoyan | **Version:** 1.0 | **License:** CC BY-SA 4.0
@@ -13,9 +13,9 @@
 
 ---
 
-## What is ALFA ECOSYSTEM?
+## What is Alfa EOS?
 
-**ALFA ECOSYSTEM** is a modular framework for safer AI workflows. It combines response validation, uncertainty handling, safety gates, audit trails, and human supervision.
+**Alfa EOS** is a modular framework for safer AI workflows. It combines response validation, uncertainty handling, safety gates, audit trails, and human supervision.
 
 The goal is not to claim that AI becomes perfect. The goal is to make AI systems easier to verify, easier to stop, and harder to run blindly when context or evidence is missing.
 
@@ -167,7 +167,7 @@ Public claims should be phrased carefully:
 
 ## Use Cases
 
-ALFA ECOSYSTEM is intended for:
+Alfa EOS is intended for:
 
 - AI safety audits
 - business AI workflow validation
@@ -184,7 +184,7 @@ ALFA ECOSYSTEM is intended for:
 **Creative Commons BY-SA 4.0** with attribution:
 
 ```text
-ALFA ECOSYSTEM Framework by Karen Tonoyan
+Alfa EOS Framework by Karen Tonoyan
 ```
 
 ---
@@ -199,7 +199,7 @@ Creator of ALFA, CERBER, GUARDIAN, ALFA Bridge, and related AI safety concepts.
 
 <div align="center">
 
-## ALFA ECOSYSTEM
+## Alfa EOS
 
 **AI Reliability. Human Control. Safety by Design.**
 

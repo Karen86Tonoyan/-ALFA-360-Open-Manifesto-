@@ -1,6 +1,6 @@
 <div align="center">
 
-# **ALFA 360**
+# **Alfa EOS / ALFA 360**
 ### **ZERO HALLUCINATION PROTOCOL**
 #### Framework for Zero-Hallucination AI & Strategic Thinking
 
@@ -232,6 +232,8 @@ Tonoyan, K. (2025). ALFA 360: Open Manifesto - Framework for Zero-Hallucination 
 *Zero Hallucinations. Zero Chaos. Zero Compromise.*
 
 ---
+
+**Part of the Alfa EOS ecosystem.**
 
 **© 2025 Karen Tonoyan — ALFA Foundation**
 

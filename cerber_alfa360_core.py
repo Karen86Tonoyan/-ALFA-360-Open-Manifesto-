@@ -20,6 +20,7 @@ import argparse
 import asyncio
 import curses
 import hashlib
+import hmac
 import json
 import logging
 import os
@@ -625,6 +626,36 @@ class WhisperPerception:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# SECURITY & INTEGRITY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class SecureLogger:
+    """
+    Signs log entries and results using HMAC-SHA256 to ensure data integrity
+    """
+    def __init__(self, secret_key: Optional[str] = None):
+        # Fallback to a default only if environment variable is missing
+        self.secret_key = secret_key or os.environ.get(
+            "ALFA_EOS_INTEGRITY_SECRET",
+            "alfa-eos-integrity-fallback-secret-2025"
+        )
+
+    def sign_data(self, data: Any) -> str:
+        """Create a HMAC-SHA256 signature for data string"""
+        message = json.dumps(data, sort_keys=True).encode()
+        return hmac.new(
+            self.secret_key.encode(),
+            message,
+            hashlib.sha256
+        ).hexdigest()
+
+    def verify_data(self, data: Any, signature: str) -> bool:
+        """Verify if data matches the signature"""
+        # Use hmac.compare_digest to prevent timing attacks
+        expected = self.sign_data(data)
+        return hmac.compare_digest(expected, signature)
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # CERBER CORE ENGINE
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -638,6 +669,7 @@ class CerberEngine:
         self.root_path.mkdir(parents=True, exist_ok=True)
         
         # Initialize components
+        self.secure_logger = SecureLogger()
         self.knox_detector = KnoxDetector()
         self.whisper_filter = WhisperPerception()
         self.intent_bot = IntentBot(whisper_perception=self.whisper_filter)
@@ -675,10 +707,14 @@ class CerberEngine:
             )
     
     def log(self, process_name: str, message: str):
-        """Write log entry for process"""
+        """Write log entry for process with integrity signature"""
         log_path = self.root_path / f"{process_name}.log"
         timestamp = time.strftime('%H:%M:%S')
-        entry = f"[{timestamp}] {message}\n"
+
+        log_data = {"process": process_name, "message": message, "time": timestamp}
+        signature = self.secure_logger.sign_data(log_data)
+
+        entry = f"[{timestamp}] {message} | SIG:{signature}\n"
         
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(entry)
@@ -1201,11 +1237,27 @@ class CerberConsole:
 def create_rest_api(engine: CerberEngine):
     """Create FastAPI REST application"""
     try:
-        from fastapi import FastAPI, HTTPException
+        from fastapi import FastAPI, HTTPException, Depends, Security, status
         from fastapi.middleware.cors import CORSMiddleware
+        from fastapi.security import APIKeyHeader
     except ImportError:
         logger.warning("FastAPI not installed. REST API disabled.")
         return None
+
+    API_KEY_NAME = "X-Alfa-EOS-Key"
+    # In production, use environment variable: ALFA_EOS_API_KEY
+    API_KEY = os.environ.get("ALFA_EOS_API_KEY", "alfa-eos-private-access-fallback-2025")
+    api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+    async def get_api_key(
+        api_key_header: str = Security(api_key_header),
+    ):
+        if api_key_header == API_KEY:
+            return api_key_header
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+        )
     
     app = FastAPI(
         title="Cerber ALFA 360 API",
@@ -1226,21 +1278,21 @@ def create_rest_api(engine: CerberEngine):
         return {"status": "online", "system": "Cerber ALFA 360"}
     
     @app.get("/status")
-    def get_status():
+    def get_status(api_key: str = Depends(get_api_key)):
         return engine.get_full_status()
     
     @app.get("/processes")
-    def get_processes():
+    def get_processes(api_key: str = Depends(get_api_key)):
         return {s: p.to_dict() for s, p in engine.processes.items()}
     
     @app.get("/processes/{symbol}")
-    def get_process(symbol: str):
+    def get_process(symbol: str, api_key: str = Depends(get_api_key)):
         if symbol not in engine.processes:
             raise HTTPException(status_code=404, detail="Process not found")
         return engine.processes[symbol].to_dict()
     
     @app.post("/processes/action")
-    def process_action(action: ProcessAction):
+    def process_action(action: ProcessAction, api_key: str = Depends(get_api_key)):
         if action.symbol not in engine.processes:
             raise HTTPException(status_code=404, detail="Process not found")
         
@@ -1257,44 +1309,44 @@ def create_rest_api(engine: CerberEngine):
         return {"success": success, "process": engine.processes[action.symbol].to_dict()}
     
     @app.post("/processes/start-all")
-    def start_all():
+    def start_all(api_key: str = Depends(get_api_key)):
         engine.start_all()
         return {"success": True, "message": "All processes started"}
     
     @app.post("/processes/stop-all")
-    def stop_all():
+    def stop_all(api_key: str = Depends(get_api_key)):
         engine.stop_all()
         return {"success": True, "message": "All processes stopped"}
     
     @app.get("/knox")
-    def get_knox():
+    def get_knox(api_key: str = Depends(get_api_key)):
         return engine.knox_detector.get_knox_status()
     
     @app.get("/whisper")
-    def get_whisper():
+    def get_whisper(api_key: str = Depends(get_api_key)):
         return engine.whisper_filter.get_stats()
     
     @app.post("/whisper/normalize")
-    def normalize_whisper(input_data: WhisperInput):
+    def normalize_whisper(input_data: WhisperInput, api_key: str = Depends(get_api_key)):
         result = engine.whisper_filter.normalize_to_whisper(input_data.text)
         return result
     
     @app.post("/browser/label")
-    def label_content(input_data: WhisperInput):
+    def label_content(input_data: WhisperInput, api_key: str = Depends(get_api_key)):
         result = engine.whisper_filter.label_content(input_data.text)
         return result
 
     @app.post("/browser/request")
-    def browser_request(body: BrowserRequest):
+    def browser_request(body: BrowserRequest, api_key: str = Depends(get_api_key)):
         result = engine.intent_bot.verify_request(body.intent, body.url)
         return result
 
     @app.post("/knowledge/scan")
-    def scan_knowledge(body: KnowledgeScanRequest):
+    def scan_knowledge(body: KnowledgeScanRequest, api_key: str = Depends(get_api_key)):
         return engine.scan_knowledge_sources(body.source)
 
     @app.get("/logs/{process_name}")
-    def get_logs(process_name: str, lines: int = 50):
+    def get_logs(process_name: str, lines: int = 50, api_key: str = Depends(get_api_key)):
         log_path = engine.root_path / f"{process_name}.log"
         if not log_path.exists():
             raise HTTPException(status_code=404, detail="Log file not found")
@@ -1304,12 +1356,41 @@ def create_rest_api(engine: CerberEngine):
             return {"process": process_name, "lines": all_lines[-lines:]}
     
     @app.get("/alfa-bridge/queue")
-    def get_message_queue():
+    def get_message_queue(api_key: str = Depends(get_api_key)):
         return {
             "queue_size": len(engine.message_queue),
             "messages": [m.to_dict() for m in engine.message_queue[-100:]]
         }
     
+    @app.get("/integrity/verify")
+    def verify_integrity(api_key: str = Depends(get_api_key)):
+        """Verify the integrity of all process logs"""
+        import re
+        results = {}
+        for symbol, proc in engine.processes.items():
+            log_path = engine.root_path / f"{proc.name}.log"
+            if not log_path.exists():
+                continue
+
+            valid_lines = 0
+            invalid_lines = 0
+            with open(log_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    # Parse line: [time] message | SIG:hash
+                    match = re.match(r"\[(.*?)\] (.*) \| SIG:([a-f0-9]+)", line)
+                    if match:
+                        timestamp, message, sig = match.groups()
+                        log_data = {"process": proc.name, "message": message.strip(), "time": timestamp}
+                        if engine.secure_logger.verify_data(log_data, sig):
+                            valid_lines += 1
+                        else:
+                            invalid_lines += 1
+                    else:
+                        invalid_lines += 1
+            results[proc.name] = {"valid": valid_lines, "invalid": invalid_lines, "tampered": invalid_lines > 0}
+
+        return results
+
     return app
 
 

@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "echo 'Building ALFA 360 Cerber Production'"
+  command = "echo 'Building Alfa EOS Cerber Production'"
 
 [build.processing]
   skip_processing = false

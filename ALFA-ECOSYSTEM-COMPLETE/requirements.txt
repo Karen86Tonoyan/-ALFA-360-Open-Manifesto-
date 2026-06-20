@@ -1,4 +1,4 @@
-# ALFA ECOSYSTEM - Requirements
+# Alfa EOS - Requirements
 # Author: Karen Tonoyan
 # Version: 1.0
 
