@@ -12,7 +12,7 @@ Completion/build step
 - `./build-fast.sh` can take 20+min to run from a cold cache!!! Please use long timeout when running `./build-fast.sh` or waiting for it to complete.
 - Policy: All errors AND all warnings must be fixed before you’re done. Treat any compiler warning as a failure and address it (rename unused vars with `_`, remove `mut`, delete dead code, etc.).
 - Do not run additional format/lint/test commands on completion (e.g., `just fmt`, `just fix`, `cargo test`) unless explicitly requested for a specific task.
-- ***NEVER run rustfmt***
+- **_NEVER run rustfmt_**
 - Before pushing to `main`, run `./pre-release.sh` to mirror the release preflight (dev-fast build, CLI smokes, workspace nextest).
 
 Optional regression checks (recommended when touching the Rust workspace):
@@ -108,7 +108,7 @@ This architecture separates concerns between execution logic (core), UI state ma
   Esc handler in `app.rs` should defer to Auto Drive, and
   `ChatWidget::handle_key_event` owns the actual stop / pause behaviour. When
   you need to tweak Esc semantics, update those two locations together.
-- The approval pane must *never* swallow Esc. `code-rs/tui/src/bottom_pane/auto_coordinator_view.rs`
+- The approval pane must _never_ swallow Esc. `code-rs/tui/src/bottom_pane/auto_coordinator_view.rs`
   intentionally lets Esc (and the other approval shortcuts) bubble back to the
   chat widget; keep this contract intact when editing the view layer.
 - Avoid adding additional Esc handlers elsewhere for Auto Drive flows. Doing

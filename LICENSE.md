@@ -9,7 +9,7 @@
 ## 🌐 Languages / Języki
 
 | 🇵🇱 Polski | 🇬🇧 English | 🇷🇺 Русский | 🇩🇪 Deutsch | 🇦🇲 Հայdelays |
-|:----------:|:-----------:|:-----------:|:-----------:|:-------------:|
+| :-------: | :--------: | :--------: | :--------: | :----------: |
 
 ---
 
@@ -20,24 +20,27 @@
 Każde użycie tego frameworka **MUSI** zawierać:
 
 ```
-"ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+"Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ### Co możesz:
+
 ✅ Kopiować i rozpowszechniać  
 ✅ Modyfikować i rozwijać  
 ✅ Używać komercyjnie (z cytowaniem)  
-✅ Integrować z własnymi projektami  
+✅ Integrować z własnymi projektami
 
 ### Czego NIE możesz:
+
 ❌ Usuwać informacji o autorze  
 ❌ Zmieniać nazwy frameworka  
 ❌ Publikować bez cytowania  
-❌ Używać do szkodzenia ludziom  
+❌ Używać do szkodzenia ludziom
 
 ### Chronione Marki:
+
 - ALFA 360
-- ALFA ECOSYSTEM
+- Alfa EOS
 - CERBER AI Conscience
 - GUARDIAN
 - ALFA COLLECTIVE MIND
@@ -55,20 +58,22 @@ Każde użycie tego frameworka **MUSI** zawierać:
 Every use of this framework **MUST** include:
 
 ```
-"ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+"Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ### You MAY:
+
 ✅ Copy and redistribute  
 ✅ Modify and extend  
 ✅ Use commercially (with attribution)  
-✅ Integrate with your projects  
+✅ Integrate with your projects
 
 ### You MAY NOT:
+
 ❌ Remove author information  
 ❌ Rename the framework  
 ❌ Publish without attribution  
-❌ Use to harm people  
+❌ Use to harm people
 
 ---
 
@@ -79,7 +84,7 @@ Every use of this framework **MUST** include:
 Каждое использование **ДОЛЖНО** включать:
 
 ```
-«ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)»
+«Alfa EOS Framework by Karen Tonoyan (2025)»
 ```
 
 ---
@@ -91,7 +96,7 @@ Every use of this framework **MUST** include:
 Jede Nutzung **MUSS** enthalten:
 
 ```
-„ALFA ECOSYSTEM Framework by Karen Tonoyan (2025)"
+„Alfa EOS Framework by Karen Tonoyan (2025)"
 ```
 
 ---
@@ -99,16 +104,18 @@ Jede Nutzung **MUSS** enthalten:
 ## 📚 Academic Citation / Cytowanie Akademickie
 
 ### APA Style:
+
 ```
-Tonoyan, K. (2025). ALFA ECOSYSTEM: Complete AI Security & Consciousness Framework. 
+Tonoyan, K. (2025). Alfa EOS: Complete AI Security & Consciousness Framework.
 ALFA Foundation. https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM
 ```
 
 ### BibTeX:
+
 ```bibtex
 @misc{tonoyan2025alfa,
   author = {Tonoyan, Karen},
-  title = {ALFA ECOSYSTEM: Complete AI Security & Consciousness Framework},
+  title = {Alfa EOS: Complete AI Security & Consciousness Framework},
   year = {2025},
   publisher = {ALFA Foundation},
   url = {https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM}
@@ -133,7 +140,7 @@ ALFA Foundation. https://github.com/Karen86Tonoyan/ALFA-ECOSYSTEM
 
 **Karen Tonoyan**  
 ALFA Foundation  
-Legnica, Poland  
+Legnica, Poland
 
 ---
 
@@ -141,6 +148,6 @@ Legnica, Poland
 
 **© 2025 Karen Tonoyan — ALFA Foundation**
 
-*Zero halucynacji. Zero chaosu. Zero kompromisów.*
+_Zero halucynacji. Zero chaosu. Zero kompromisów._
 
 </div>

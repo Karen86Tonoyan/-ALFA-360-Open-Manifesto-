@@ -1,4 +1,4 @@
-# ALFA 360: Otwarty Manifest
+# Alfa EOS / ALFA 360: Otwarty Manifest
 ## Framework Myślenia Strategicznego i AI Bez Halucynacji
 
 **Autor:** Karen Tonoyan  
@@ -10,7 +10,7 @@
 
 <div align="center">
 
-# **ALFA 360**
+# **Alfa EOS / ALFA 360**
 ### **PROTOKÓŁ ZERO HALUCYNACJI**
 
 *„Zero halucynacji nie oznacza zero błędów — oznacza zero akceptacji dla nieweryfikowanych twierdzeń."*
