@@ -630,6 +630,48 @@
             );
         }
 
+        // Integrity Panel Component
+        function IntegrityPanel({ apiUrl, apiKey }) {
+            const [integrity, setIntegrity] = useState(null);
+
+            useEffect(() => {
+                const check = async () => {
+                    try {
+                        const res = await fetch(`${apiUrl}/integrity/verify`, {
+                            headers: { 'X-Alfa-EOS-Key': apiKey }
+                        });
+                        const data = await res.json();
+                        setIntegrity(data);
+                    } catch (e) {}
+                };
+                check();
+                const interval = setInterval(check, 10000);
+                return () => clearInterval(interval);
+            }, [apiUrl, apiKey]);
+
+            if (!integrity) return null;
+
+            const isTampered = Object.values(integrity).some(v => v.tampered);
+
+            return (
+                <div className="knox-panel" style={{border: isTampered ? '1px solid var(--accent-red)' : '1px solid var(--accent-green)', marginTop: '24px'}}>
+                    <div className="section-title" style={{color: isTampered ? 'var(--accent-red)' : 'var(--accent-green)'}}>
+                        🛡️ System Integrity: {isTampered ? 'TAMPERED' : 'SECURE'}
+                    </div>
+                    <div className="knox-status-grid">
+                        {Object.entries(integrity).map(([name, stat]) => (
+                            <div key={name} className="knox-item">
+                                <span className="knox-item-label">{name}</span>
+                                <span className={`knox-item-value ${stat.tampered ? 'danger' : 'secure'}`}>
+                                    {stat.valid} valid / {stat.invalid} invalid
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
         // Whisper Panel Component
         function WhisperPanel({ whisperStats }) {
             const threatRate = whisperStats?.threat_rate || 0;
@@ -697,7 +739,7 @@
         }
 
         // AI Browser Component
-        function AIBrowser({ apiUrl }) {
+        function AIBrowser({ apiUrl, apiKey }) {
             const [url, setUrl] = useState('');
             const [intent, setIntent] = useState('');
             const [result, setResult] = useState(null);
@@ -711,7 +753,10 @@
                 try {
                     const response = await fetch(`${apiUrl}/browser/request`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Alfa-EOS-Key': apiKey
+                        },
                         body: JSON.stringify({ url, intent })
                     });
                     const data = await response.json();
@@ -774,6 +819,7 @@
         // Main Dashboard Component
         function CerberDashboard() {
             const [apiUrl, setApiUrl] = useState('http://localhost:8360');
+            const [apiKey, setApiKey] = useState('alfa-eos-private-access-fallback-2025');
             const [connected, setConnected] = useState(false);
             const [status, setStatus] = useState(null);
             const [logs, setLogs] = useState([]);
@@ -787,7 +833,9 @@
 
             const fetchStatus = useCallback(async () => {
                 try {
-                    const response = await fetch(`${apiUrl}/status`);
+                    const response = await fetch(`${apiUrl}/status`, {
+                        headers: { 'X-Alfa-EOS-Key': apiKey }
+                    });
                     if (response.ok) {
                         const data = await response.json();
                         setStatus(data);
@@ -825,7 +873,10 @@
                     try {
                         await fetch(`${apiUrl}/processes/action`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Alfa-EOS-Key': apiKey
+                            },
                             body: JSON.stringify({ symbol, action: 'toggle' })
                         });
                         fetchStatus();
@@ -849,7 +900,10 @@
 
             const handleStartAll = async () => {
                 if (connected) {
-                    await fetch(`${apiUrl}/processes/start-all`, { method: 'POST' });
+                    await fetch(`${apiUrl}/processes/start-all`, {
+                        method: 'POST',
+                        headers: { 'X-Alfa-EOS-Key': apiKey }
+                    });
                     fetchStatus();
                 } else {
                     setStatus(prev => ({
@@ -863,7 +917,10 @@
 
             const handleStopAll = async () => {
                 if (connected) {
-                    await fetch(`${apiUrl}/processes/stop-all`, { method: 'POST' });
+                    await fetch(`${apiUrl}/processes/stop-all`, {
+                        method: 'POST',
+                        headers: { 'X-Alfa-EOS-Key': apiKey }
+                    });
                     fetchStatus();
                 } else {
                     setStatus(prev => ({
@@ -880,7 +937,10 @@
                     try {
                         await fetch(`${apiUrl}/knowledge/scan`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Alfa-EOS-Key': apiKey
+                            },
                             body: JSON.stringify({ source })
                         });
                         fetchStatus();
@@ -923,6 +983,13 @@
                             value={apiUrl}
                             onChange={(e) => setApiUrl(e.target.value)}
                             placeholder="API URL (e.g., http://localhost:8360)"
+                        />
+                        <input
+                            type="password"
+                            className="api-input"
+                            value={apiKey}
+                            onChange={(e) => setApiKey(e.target.value)}
+                            placeholder="API Key (X-Alfa-EOS-Key)"
                         />
                         <button className="btn-connect" onClick={handleConnect}>
                             Connect
@@ -987,10 +1054,11 @@
                         <div className="sidebar">
                             <KnoxPanel knoxStatus={status?.knox} />
                             <WhisperPanel whisperStats={status?.whisper} />
+                            <IntegrityPanel apiUrl={apiUrl} apiKey={apiKey} />
                         </div>
                     </div>
 
-                    <AIBrowser apiUrl={apiUrl} />
+                    <AIBrowser apiUrl={apiUrl} apiKey={apiKey} />
 
                     <div className="whisper-panel" style={{marginTop: '24px'}}>
                         <div className="section-title">🧠 Knowledge Graph Integration</div>

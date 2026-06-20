@@ -2,17 +2,17 @@
 
 &ensp;
 
-<img src="docs/images/every-logo.png" alt="Every Code Logo" width="400">
+<img src="https://github.com/Karen86Tonoyan/Alfa-EOS-Private/raw/main/logo.png" alt="Alfa EOS Logo" width="400">
 
 &ensp;
 
-**Alfa EOS** (powered by Every Code) is a fast, local coding agent for your terminal. It's a community-driven fork of `openai/codex` focused on real developer ergonomics: Browser integration, multi-agents, theming, and reasoning control — all while staying compatible with upstream.
+**Alfa EOS** (powered by Alfa EOS) is a fast, local coding agent for your terminal. It's a community-driven fork of `openai/codex` focused on real developer ergonomics: Browser integration, multi-agents, theming, and reasoning control — all while staying compatible with upstream.
 
 &ensp;
 
 ## What's new in v0.5.0 (November 21st 2025)
 
-- **Renamed to Every Code** – new name for better discoverability while keeping the `code` shorthand.
+- **Renamed to Alfa EOS** – new name for better discoverability while keeping the `code` shorthand.
 - **Auto Drive upgraded** – hand `/auto` a task and it now plans, coordinates agents, reruns checks, and recovers from hiccups without babysitting.
 - **Many QoL improvements** – `/resume` and `/undo` work reliably. All major upstream features have been ported across including compaction v2 and -max and -mini models.
 - **Unified settings** – `/settings` centralizes limits, model routing, themes, and CLI integrations so you can audit configuration in one place.
@@ -24,7 +24,7 @@ Read the full notes in `docs/release-notes/RELEASE_NOTES.md`.
 
 &ensp;
 
-## Why Every Code
+## Why Alfa EOS
 
 - 🚀 **Auto Drive orchestration** – Multi-agent automation that now self-heals and ships complete tasks.
 - 🌐 **Browser Integration** – CDP support, headless browsing, screenshots captured inline.
@@ -84,7 +84,7 @@ Note: If another tool already provides a `code` command (e.g. VS Code), our CLI 
 
 ### Install Claude & Gemini (optional)
 
-Every Code supports orchestrating other AI CLI tools. Install these and config to use alongside Code.
+Alfa EOS supports orchestrating other AI CLI tools. Install these and config to use alongside Code.
 
 ```bash
 # Ensure Node.js 20+ is available locally (installs into ~/.n)
@@ -186,7 +186,7 @@ Options:
 
 ## Memory & project docs
 
-Every Code can remember context across sessions:
+Alfa EOS can remember context across sessions:
 
 1. **Create an `AGENTS.md` or `CLAUDE.md` file** in your project root:
 
@@ -206,7 +206,7 @@ This is a React TypeScript application with:
 - `/server/` - Backend services
 ```
 
-2. **Session memory**: Every Code maintains conversation history
+2. **Session memory**: Alfa EOS maintains conversation history
 3. **Codebase analysis**: Automatically understands project structure
 
 &ensp;
@@ -230,7 +230,7 @@ code --config output_format=json "list all TODO comments"
 
 ## Model Context Protocol (MCP)
 
-Every Code supports MCP for extended capabilities:
+Alfa EOS supports MCP for extended capabilities:
 
 - **File operations**: Advanced file system access
 - **Database connections**: Query and modify databases
@@ -252,7 +252,7 @@ args = ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/project"]
 Main config file: `~/.code/config.toml`
 
 > [!NOTE]
-> Every Code reads from both `~/.code/` and `~/.codex/` for backwards compatibility, but it only writes updates to `~/.code/`. If you switch back to Codex and it fails to start, remove `~/.codex/config.toml`. If Every Code appears to miss settings after upgrading, copy your legacy `~/.codex/config.toml` into `~/.code/`.
+> Alfa EOS reads from both `~/.code/` and `~/.codex/` for backwards compatibility, but it only writes updates to `~/.code/`. If you switch back to Codex and it fails to start, remove `~/.codex/config.toml`. If Alfa EOS appears to miss settings after upgrading, copy your legacy `~/.codex/config.toml` into `~/.code/`.
 
 ```toml
 # Model settings
@@ -294,7 +294,7 @@ model_reasoning_summary = "detailed"
 
 **Can I use my existing Codex configuration?**
 
-> Yes. Every Code reads from both `~/.code/` (primary) and legacy `~/.codex/` directories. We only write to `~/.code/`, so Codex will keep running if you switch back; copy or remove legacy files if you notice conflicts.
+> Yes. Alfa EOS reads from both `~/.code/` (primary) and legacy `~/.codex/` directories. We only write to `~/.code/`, so Codex will keep running if you switch back; copy or remove legacy files if you notice conflicts.
 
 **Does this work with ChatGPT Plus?**
 
@@ -308,7 +308,7 @@ model_reasoning_summary = "detailed"
 
 ## Contributing
 
-We welcome contributions! Every Code maintains compatibility with upstream while adding community-requested features.
+We welcome contributions! Alfa EOS maintains compatibility with upstream while adding community-requested features.
 
 ### Development workflow
 
@@ -341,11 +341,11 @@ npm install
 ### License & attribution
 
 - This project is a community fork of `openai/codex` under **Apache-2.0**. We preserve upstream LICENSE and NOTICE files.
-- **Every Code** (Code) is **not** affiliated with, sponsored by, or endorsed by OpenAI.
+- **Alfa EOS** (Code) is **not** affiliated with, sponsored by, or endorsed by OpenAI.
 
 ### Your responsibilities
 
-Using OpenAI, Anthropic or Google services through Every Code means you agree to **their Terms and policies**. In particular:
+Using OpenAI, Anthropic or Google services through Alfa EOS means you agree to **their Terms and policies**. In particular:
 
 - **Don't** programmatically scrape/extract content outside intended flows.
 - **Don't** bypass or interfere with rate limits, quotas, or safety mitigations.
@@ -359,7 +359,7 @@ Using OpenAI, Anthropic or Google services through Every Code means you agree to
 
 ### Subject to change
 
-AI providers can change eligibility, limits, models, or authentication flows. Every Code supports **both** ChatGPT sign-in and API-key modes so you can pick what fits (local/hobby vs CI/automation).
+AI providers can change eligibility, limits, models, or authentication flows. Alfa EOS supports **both** ChatGPT sign-in and API-key modes so you can pick what fits (local/hobby vs CI/automation).
 
 &ensp;
 
@@ -367,7 +367,7 @@ AI providers can change eligibility, limits, models, or authentication flows. Ev
 
 Apache 2.0 - See [LICENSE](LICENSE) file for details.
 
-Every Code is a community fork of the original Codex CLI. We maintain compatibility while adding enhanced features requested by the developer community.
+Alfa EOS is a community fork of the original Codex CLI. We maintain compatibility while adding enhanced features requested by the developer community.
 
 &ensp;
 
