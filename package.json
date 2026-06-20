@@ -3,8 +3,8 @@
   "private": true,
   "description": "Tools for repo-wide maintenance.",
   "scripts": {
-    "format": "prettier --check *.json *.md .github/workflows/*.yml **/*.js",
-    "format:fix": "prettier --write *.json *.md .github/workflows/*.yml **/*.js",
+    "format": "prettier --check *.json *.md",
+    "format:fix": "prettier --write *.json *.md",
     "build": "if [ -d code-rs ]; then cd code-rs && cargo build --release --bin code --bin code-tui --bin code-exec; else echo 'skipping rust build: code-rs not found'; fi",
     "build:dev": "if [ -d code-rs ]; then cd code-rs && cargo build --bin code --bin code-tui --bin code-exec; else echo 'skipping rust build: code-rs not found'; fi",
     "build:quick": "if [ -d code-rs ]; then cd code-rs && cargo build --release --bin code; else echo 'skipping rust build: code-rs not found'; fi",
