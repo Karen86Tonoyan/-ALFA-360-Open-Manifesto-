@@ -776,9 +776,13 @@ class CerberEngine:
             stop_event.wait(10)
     
     def _run_network_trace(self, stop_event: threading.Event):
+        last_io = psutil.net_io_counters()
         while not stop_event.is_set():
-            packets = random.randint(10, 70)
-            self.log("network_trace", f"网络流量监控: {packets} 包捕获 (packets)")
+            current_io = psutil.net_io_counters()
+            bytes_sent = (current_io.bytes_sent - last_io.bytes_sent) / 1024
+            bytes_recv = (current_io.bytes_recv - last_io.bytes_recv) / 1024
+            self.log("network_trace", f"网络流量监控: 发送 {bytes_sent:.2f} KB | 接收 {bytes_recv:.2f} KB")
+            last_io = current_io
             stop_event.wait(6)
     
     def _run_integrity_check(self, stop_event: threading.Event):

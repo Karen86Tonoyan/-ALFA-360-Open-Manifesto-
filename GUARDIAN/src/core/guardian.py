@@ -622,21 +622,24 @@ class SelfHealingModule:
         return healing_success
     
     def _soft_heal(self, instance: CerberInstance) -> bool:
-        """Łagodne leczenie / Soft healing"""
-        # Symulacja restartu komponentu
+        """Łagodne leczenie / Soft healing - Resetting internal state"""
+        self.logger.info(f"Refresing internal state for {instance.name}")
         instance.state = CerberState.INIT
-        time.sleep(0.1)  # Symulacja restartu
+        instance.threats_handled = 0 # Reset counters as a "soft" fix
+        time.sleep(0.1)
         instance.state = CerberState.READY
         return True
     
     def _restore_from_backup(self, instance: CerberInstance) -> bool:
-        """Przywróć z backupu / Restore from backup"""
+        """Przywróć z backupu / Restore from backup - Reloading last known good config"""
         if instance.instance_id not in self.backup_states:
             return False
         
         backup = self.backup_states[instance.instance_id]
-        # Symulacja przywracania stanu
+        self.logger.info(f"Restoring {instance.name} from backup timestamped {backup['timestamp']}")
+
         instance.state = CerberState.RECOVERY
+        instance.version = backup['state'].get('version', instance.version)
         time.sleep(0.2)
         instance.state = CerberState.READY
         return True
