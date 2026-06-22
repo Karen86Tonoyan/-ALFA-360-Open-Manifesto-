@@ -1,4 +1,5 @@
 # Every CODE
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/f8653cfa-34a2-40a2-9340-5fed0fe8c925" />
 
 &ensp;
 
