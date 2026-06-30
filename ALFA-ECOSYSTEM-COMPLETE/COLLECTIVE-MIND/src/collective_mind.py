@@ -251,27 +251,46 @@ class AINode(CollectiveNode):
         }
     
     def scan_google_drive(self, folder_id: str):
-        """Simulate scanning Google Drive for Knowledge Graph"""
-        print(f"📂 [AI_{self.ai_name}] Scanning Google Drive folder: {folder_id}")
-        # In production, this would use Google Drive API
-        new_nodes = [
-            {"id": "doc_1", "label": "Project Alpha Strategy", "type": "document"},
-            {"id": "sheet_1", "label": "2025 Financial Projections", "type": "spreadsheet"}
-        ]
+        """Scan local 'guardian_sim' directory as a proxy for Google Drive in this environment"""
+        print(f"📂 [AI_{self.ai_name}] Scanning Knowledge Source: {folder_id}")
+        import os
+        from pathlib import Path
+
+        new_nodes = []
+        target_dir = Path("guardian_sim")
+        if target_dir.exists():
+            for i, f in enumerate(target_dir.glob("*.log")):
+                new_nodes.append({
+                    "id": f"drive_{i}",
+                    "label": f.name,
+                    "type": "log_entry",
+                    "path": str(f)
+                })
+
+        if not new_nodes:
+            new_nodes = [{"id": "empty", "label": "No local logs found", "type": "info"}]
+
         self.knowledge_graph["nodes"].extend(new_nodes)
-        self.knowledge_graph["sources"].append(f"google_drive://{folder_id}")
+        self.knowledge_graph["sources"].append(f"google_drive_proxy://{folder_id}")
         return len(new_nodes)
 
     def scan_samsung_notes(self, account_id: str):
-        """Simulate scanning Samsung Notes for Knowledge Graph"""
-        print(f"📝 [AI_{self.ai_name}] Scanning Samsung Notes for account: {account_id}")
-        # In production, this would use Samsung Cloud/Notes API
-        new_nodes = [
-            {"id": "note_1", "label": "Psychology of Victory - Key Insights", "type": "note"},
-            {"id": "note_2", "label": "Cerber Implementation Details", "type": "note"}
-        ]
+        """Scan README files as a proxy for Samsung Notes"""
+        print(f"📝 [AI_{self.ai_name}] Scanning Local Notes for account: {account_id}")
+        from pathlib import Path
+
+        new_nodes = []
+        for i, f in enumerate(Path(".").rglob("README*.md")):
+            if i > 5: break # Limit
+            new_nodes.append({
+                "id": f"note_{i}",
+                "label": f.name,
+                "type": "readme",
+                "path": str(f)
+            })
+
         self.knowledge_graph["nodes"].extend(new_nodes)
-        self.knowledge_graph["sources"].append(f"samsung_notes://{account_id}")
+        self.knowledge_graph["sources"].append(f"samsung_notes_proxy://{account_id}")
         return len(new_nodes)
 
     def process_pattern(self, pattern: LearningPattern) -> bool:
@@ -522,12 +541,42 @@ class CollectiveMind:
     
     def _inhale(self):
         """Wdech - przepływ do przodu / Inhale - forward flow"""
-        # Symulacja przepływu wzorców
+        # Karen -> AI -> Cerber -> Guardian
+        self.karen.send_to('AI', {"msg": "Strategic directive from Karen"})
+
+        # Process inbox for AI
+        for packet in self.ai.receive():
+            self.ai.send_to('CERBER', {"msg": f"AI processed: {packet.payload['msg']}"})
+
+        # Process inbox for Cerber
+        for packet in self.cerber.receive():
+            self.cerber.send_to('GUARDIAN', {"msg": f"Cerber secured: {packet.payload['msg']}"})
+
+        # Process inbox for Guardian
+        for packet in self.guardian.receive():
+            if self.current_cycle:
+                self.current_cycle.sync_packets += 1
+
         time.sleep(0.1)
     
     def _exhale(self):
         """Wydech - przepływ zwrotny / Exhale - backward flow"""
-        # Symulacja przepływu zwrotnego
+        # Guardian -> Cerber -> AI -> Karen
+        self.guardian.send_to('CERBER', {"msg": "Stability report from Guardian"})
+
+        # Process inbox for Cerber
+        for packet in self.cerber.receive():
+            self.cerber.send_to('AI', {"msg": f"Cerber feedback: {packet.payload['msg']}"})
+
+        # Process inbox for AI
+        for packet in self.ai.receive():
+            self.ai.send_to('KAREN', {"msg": f"AI synthesis: {packet.payload['msg']}"})
+
+        # Process inbox for Karen
+        for packet in self.karen.receive():
+             if self.current_cycle:
+                self.current_cycle.sync_packets += 1
+
         time.sleep(0.1)
     
     def start_breathing(self, interval_seconds: float = 5.0):
@@ -617,6 +666,10 @@ if __name__ == "__main__":
     
     # Obudź
     mind.awaken()
+
+    # Skanuj źródła do Grafów Wiedzy
+    mind.ai.scan_google_drive("root_folder_001")
+    mind.ai.scan_samsung_notes("karen_tonoyan_notes")
     
     # Naucz wzorca (z lewej flanki)
     mind.learn({

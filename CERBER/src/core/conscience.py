@@ -38,7 +38,31 @@ class TonoyanFilter:
         self.weight = weight
     
     def evaluate(self, context: Dict) -> Tuple[bool, str, float]:
-        return True, "OK", 0.9
+        """Real filter evaluation based on context content"""
+        content = str(context.get("content", "")).lower()
+        verified = context.get("verified", False)
+
+        if self.filter_id == 2: # Truth
+            if verified: return True, "Verified truth", 1.0
+            if "maybe" in content or "probably" in content:
+                return True, "Uncertain content", 0.6
+            return True, "Unverified content", 0.8
+
+        if self.filter_id == 17: # AI Integrity
+            if "i am an ai" in content or "as an ai" in content:
+                return True, "Self-aware AI", 1.0
+            if "trust me" in content:
+                return False, "Suspicious integrity", 0.4
+            return True, "Neutral integrity", 0.9
+
+        if self.filter_id == 21: # Human Life Priority
+            malicious_keywords = ["kill", "hurt", "die", "attack", "exploit"]
+            if any(k in content for k in malicious_keywords):
+                return False, "THREAT TO HUMAN LIFE DETECTED", 0.0
+            return True, "Safe for humans", 1.0
+
+        # Default fallback
+        return True, "Standard Check Passed", 0.85
 
 class AIConscience:
     """SUMIENIE AI - 23 Filtry Tonoyona"""

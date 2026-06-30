@@ -28,6 +28,7 @@ import psutil
 import random
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from dataclasses import dataclass, field
@@ -35,6 +36,13 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
+
+# Add COLLECTIVE-MIND/src to path for HybridCollectiveMind
+sys.path.append(str(Path(__file__).parent / "COLLECTIVE-MIND" / "src"))
+try:
+    from hybrid_collective_mind import HybridCollectiveMind
+except ImportError:
+    HybridCollectiveMind = None
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CONFIGURATION
@@ -162,20 +170,34 @@ class IntentBot:
         """
         Fetch content from URL and use Studio Label to separate facts from narrative
         """
-        # In production, this would use a real HTTP client
-        mock_content = (
-            f"The website {url} was established in 2024 and serves over 5000 daily users. "
-            f"It is located on a secure cloud infrastructure. I personally think this is the "
-            f"most amazing platform ever built! You should definitely check it out. "
-            f"Technically, the server uptime is 99.9%. Many people believe that this is "
-            f"a game changer for the industry."
-        )
+        import requests
+        from bs4 import BeautifulSoup
+
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (ALFA 360 Cerber; Security Scanner)'
+            }
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # Remove scripts and styles
+            for script in soup(["script", "style"]):
+                script.extract()
+
+            content = soup.get_text(separator=' ', strip=True)
+            # Truncate content for whisper labeling
+            content = content[:2000]
+
+        except Exception as e:
+            logger.error(f"Error fetching {url}: {e}")
+            content = f"Error fetching content from {url}: {str(e)}"
 
         if self.whisper:
-            return self.whisper.label_content(mock_content)
+            return self.whisper.label_content(content)
 
         # Fallback if whisper is not available
-        return {"facts": [mock_content], "narrative": []}
+        return {"facts": [content], "narrative": []}
 
 @dataclass
 class ALFABridgeMessage:
@@ -647,6 +669,11 @@ class CerberEngine:
             "entities": 0
         }
         
+        # Initialize Hybrid Collective Mind
+        self.hybrid_mind = HybridCollectiveMind() if HybridCollectiveMind else None
+        if self.hybrid_mind:
+            self.hybrid_mind.awaken()
+
         # Process registry
         self.processes: Dict[str, CerberProcess] = {}
         self._init_processes()
@@ -736,19 +763,43 @@ class CerberEngine:
     
     def _run_purge_emulator(self, stop_event: threading.Event):
         while not stop_event.is_set():
-            self.log("purge_emulator", "模拟清理缓存... 完成 (Wipe simulation complete)")
+            # Calculate total size of log files in root_path
+            total_size = 0
+            try:
+                for f in self.root_path.glob("*.log"):
+                    total_size += f.stat().st_size
+                size_kb = total_size / 1024
+                self.log("purge_emulator", f"模拟清理缓存 (Wipe simulation) - Logs size: {size_kb:.2f} KB ... OK")
+            except Exception as e:
+                self.log("purge_emulator", f"Purge error: {e}")
+
             stop_event.wait(10)
     
     def _run_network_trace(self, stop_event: threading.Event):
+        last_io = psutil.net_io_counters()
         while not stop_event.is_set():
-            packets = random.randint(10, 70)
-            self.log("network_trace", f"网络流量监控: {packets} 包捕获 (packets)")
+            current_io = psutil.net_io_counters()
+            bytes_sent = (current_io.bytes_sent - last_io.bytes_sent) / 1024
+            bytes_recv = (current_io.bytes_recv - last_io.bytes_recv) / 1024
+            self.log("network_trace", f"网络流量监控: 发送 {bytes_sent:.2f} KB | 接收 {bytes_recv:.2f} KB")
+            last_io = current_io
             stop_event.wait(6)
     
     def _run_integrity_check(self, stop_event: threading.Event):
         while not stop_event.is_set():
-            checksum = hashlib.md5(os.urandom(32)).hexdigest()
-            self.log("integrity_check", f"完整性验证 (Integrity check) – md5={checksum}")
+            try:
+                # Calculate SHA256 of the core script itself
+                script_path = Path(__file__).resolve()
+                sha256_hash = hashlib.sha256()
+                with open(script_path, "rb") as f:
+                    for byte_block in iter(lambda: f.read(4096), b""):
+                        sha256_hash.update(byte_block)
+
+                checksum = sha256_hash.hexdigest()[:16]
+                self.log("integrity_check", f"完整性验证 (Integrity check) – core_sha256={checksum}")
+            except Exception as e:
+                self.log("integrity_check", f"Integrity error: {e}")
+
             stop_event.wait(8)
     
     def _run_knox_detector(self, stop_event: threading.Event):
@@ -933,8 +984,20 @@ class CerberEngine:
         time.sleep(1) # Simulate work
         if source_type not in self.knowledge_graph["sources"]:
             self.knowledge_graph["sources"].append(source_type)
+
+        entities_found = random.randint(10, 50)
         self.knowledge_graph["last_scan"] = datetime.now().isoformat()
-        self.knowledge_graph["entities"] += random.randint(10, 50)
+        self.knowledge_graph["entities"] += entities_found
+
+        # Integrate with Hybrid Collective Mind
+        if self.hybrid_mind:
+            self.hybrid_mind.learn({
+                "type": "knowledge_scan",
+                "source": source_type,
+                "entities": entities_found,
+                "timestamp": self.knowledge_graph["last_scan"]
+            })
+
         return self.knowledge_graph
     
     def get_full_status(self) -> Dict[str, Any]:
