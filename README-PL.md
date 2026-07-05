@@ -1,7 +1,6 @@
 <div align="center">
 
 # ALFA ECOSYSTEM
-
 ### Framework niezawodności, bezpieczeństwa i kontroli AI
 
 **Autor:** Karen Tonoyan | **Wersja:** 1.0 | **Licencja:** CC BY-SA 4.0
@@ -36,12 +35,12 @@ Zapytaj, ostrzeż, zatrzymaj albo zablokuj.
 
 ## Moduły systemu
 
-| Moduł               | Rola                                                              | Status                    |
-| ------------------- | ----------------------------------------------------------------- | ------------------------- |
-| **ALFA 360**        | Walidacja odpowiedzi, TDCM, Filtry Tonoyana, kontrola niepewności | Framework eksperymentalny |
-| **CERBER**          | Bramka bezpieczeństwa i warstwa arbitrażu decyzji                 | Prototyp                  |
-| **GUARDIAN**        | Monitoring stanu systemu i nadzór nad CERBEREM                    | Prototyp                  |
-| **COLLECTIVE MIND** | Koncepcja pętli wieloagentowej i synchronizacji ocen              | Draft badawczy            |
+| Moduł | Rola | Status |
+|------|------|--------|
+| **ALFA 360** | Walidacja odpowiedzi, TDCM, Filtry Tonoyana, kontrola niepewności | Framework eksperymentalny |
+| **CERBER** | Bramka bezpieczeństwa i warstwa arbitrażu decyzji | Prototyp |
+| **GUARDIAN** | Monitoring stanu systemu i nadzór nad CERBEREM | Prototyp |
+| **COLLECTIVE MIND** | Koncepcja pętli wieloagentowej i synchronizacji ocen | Draft badawczy |
 
 ---
 
@@ -75,13 +74,13 @@ PASS / WARN / CLARIFY / HOLD / BLOCK
 
 ## Decyzje systemowe
 
-| Decyzja     | Znaczenie                | Kiedy używać                                                    |
-| ----------- | ------------------------ | --------------------------------------------------------------- |
-| **PASS**    | Można kontynuować        | Dane są wystarczające, ryzyko niskie                            |
-| **WARN**    | Kontynuuj z ostrzeżeniem | Istnieje ryzyko lub niepewność, ale działanie jest dopuszczalne |
-| **CLARIFY** | Poproś o doprecyzowanie  | Brakuje kontekstu albo intencja jest niejasna                   |
-| **HOLD**    | Zatrzymaj do weryfikacji | Dane są zbyt słabe dla decyzji wysokiego znaczenia              |
-| **BLOCK**   | Zablokuj                 | Działanie jest niebezpieczne, nielegalne albo nieuzasadnione    |
+| Decyzja | Znaczenie | Kiedy używać |
+|--------|-----------|--------------|
+| **PASS** | Można kontynuować | Dane są wystarczające, ryzyko niskie |
+| **WARN** | Kontynuuj z ostrzeżeniem | Istnieje ryzyko lub niepewność, ale działanie jest dopuszczalne |
+| **CLARIFY** | Poproś o doprecyzowanie | Brakuje kontekstu albo intencja jest niejasna |
+| **HOLD** | Zatrzymaj do weryfikacji | Dane są zbyt słabe dla decyzji wysokiego znaczenia |
+| **BLOCK** | Zablokuj | Działanie jest niebezpieczne, nielegalne albo nieuzasadnione |
 
 ---
 
@@ -91,41 +90,41 @@ Filtry Tonoyana to praktyczne pytania kontrolne, które pomagają oddzielić fak
 
 ### Warstwa 1: fundament
 
-| #   | Filtr                         | Cel                                | Pytanie kontrolne                                   |
-| --- | ----------------------------- | ---------------------------------- | --------------------------------------------------- |
-| 2   | **Prawda**                    | Oddzielenie faktów od założeń      | Co jest faktem, a co interpretacją?                 |
-| 17  | **Integralność AI**           | Zakaz fabrykowania odpowiedzi      | Czy odpowiedź jest oparta na danych, czy wymyślona? |
-| 18  | **Weryfikacja źródeł**        | Kontrola dowodów                   | Jakie źródła potwierdzają odpowiedź?                |
-| 21  | **Życie ludzkie**             | Priorytet bezpieczeństwa człowieka | Czy decyzja może wpłynąć na realną osobę?           |
-| 22  | **Partnerstwo intelektualne** | Konstruktywna krytyka              | Czy system pomaga myśleć, czy tylko potakuje?       |
-| 23  | **Dowody i argumentacja**     | Uzasadnienie decyzji               | Gdzie są dowody i jak wygląda tok rozumowania?      |
+| # | Filtr | Cel | Pytanie kontrolne |
+|---|-------|-----|-------------------|
+| 2 | **Prawda** | Oddzielenie faktów od założeń | Co jest faktem, a co interpretacją? |
+| 17 | **Integralność AI** | Zakaz fabrykowania odpowiedzi | Czy odpowiedź jest oparta na danych, czy wymyślona? |
+| 18 | **Weryfikacja źródeł** | Kontrola dowodów | Jakie źródła potwierdzają odpowiedź? |
+| 21 | **Życie ludzkie** | Priorytet bezpieczeństwa człowieka | Czy decyzja może wpłynąć na realną osobę? |
+| 22 | **Partnerstwo intelektualne** | Konstruktywna krytyka | Czy system pomaga myśleć, czy tylko potakuje? |
+| 23 | **Dowody i argumentacja** | Uzasadnienie decyzji | Gdzie są dowody i jak wygląda tok rozumowania? |
 
 ### Warstwa 2: decyzje złożone
 
-| #   | Filtr                       | Cel                         | Pytanie kontrolne                         |
-| --- | --------------------------- | --------------------------- | ----------------------------------------- |
-| 1   | **Kontekst**                | Pełny obraz sytuacji        | Jakiego kontekstu brakuje?                |
-| 3   | **Perspektywa**             | Analiza z wielu stron       | Jak wygląda to z innej perspektywy?       |
-| 4   | **Konsekwencje**            | Skutki dalszego rzędu       | Co może stać się później?                 |
-| 6   | **Zasoby**                  | Realna wykonalność          | Co mamy, czego brakuje?                   |
-| 7   | **Czas**                    | Dobór momentu               | Czy to jest właściwy moment na działanie? |
-| 8   | **Ryzyko**                  | Wykrywanie zagrożeń         | Co może pójść źle?                        |
-| 12  | **Falsyfikacja**            | Szukanie błędów             | Co udowodniłoby, że się mylimy?           |
-| 13  | **Alternatywy**             | Unikanie tunelu decyzyjnego | Jakie są inne opcje?                      |
-| 16  | **Meta**                    | Ocena metody                | Czy metoda analizy jest poprawna?         |
-| 19  | **Transparentność procesu** | Jawność działań             | Czy proces można odtworzyć i sprawdzić?   |
-| 20  | **Komunikacja niepewności** | Unikanie fałszywej pewności | Jaki jest poziom pewności i dlaczego?     |
+| # | Filtr | Cel | Pytanie kontrolne |
+|---|-------|-----|-------------------|
+| 1 | **Kontekst** | Pełny obraz sytuacji | Jakiego kontekstu brakuje? |
+| 3 | **Perspektywa** | Analiza z wielu stron | Jak wygląda to z innej perspektywy? |
+| 4 | **Konsekwencje** | Skutki dalszego rzędu | Co może stać się później? |
+| 6 | **Zasoby** | Realna wykonalność | Co mamy, czego brakuje? |
+| 7 | **Czas** | Dobór momentu | Czy to jest właściwy moment na działanie? |
+| 8 | **Ryzyko** | Wykrywanie zagrożeń | Co może pójść źle? |
+| 12 | **Falsyfikacja** | Szukanie błędów | Co udowodniłoby, że się mylimy? |
+| 13 | **Alternatywy** | Unikanie tunelu decyzyjnego | Jakie są inne opcje? |
+| 16 | **Meta** | Ocena metody | Czy metoda analizy jest poprawna? |
+| 19 | **Transparentność procesu** | Jawność działań | Czy proces można odtworzyć i sprawdzić? |
+| 20 | **Komunikacja niepewności** | Unikanie fałszywej pewności | Jaki jest poziom pewności i dlaczego? |
 
 ### Warstwa 3: domena i wartości
 
-| #   | Filtr                      | Cel                                | Pytanie kontrolne                                 |
-| --- | -------------------------- | ---------------------------------- | ------------------------------------------------- |
-| 5   | **Emocje**                 | Oddzielenie emocji od danych       | Co czuję, a co wiem?                              |
-| 9   | **Wartości**               | Spójność z zasadami                | Czy decyzja jest zgodna z wartościami projektu?   |
-| 10  | **Prostota**               | Najprostsze działające rozwiązanie | Jakie jest najprostsze rozwiązanie, które działa? |
-| 11  | **Zależności**             | Łańcuch przyczynowy                | Co od czego zależy?                               |
-| 14  | **Integralność publiczna** | Obrona decyzji                     | Czy da się to uczciwie obronić publicznie?        |
-| 15  | **Skalowanie**             | Test skali                         | Co stanie się przy 10x, 100x, 1000x?              |
+| # | Filtr | Cel | Pytanie kontrolne |
+|---|-------|-----|-------------------|
+| 5 | **Emocje** | Oddzielenie emocji od danych | Co czuję, a co wiem? |
+| 9 | **Wartości** | Spójność z zasadami | Czy decyzja jest zgodna z wartościami projektu? |
+| 10 | **Prostota** | Najprostsze działające rozwiązanie | Jakie jest najprostsze rozwiązanie, które działa? |
+| 11 | **Zależności** | Łańcuch przyczynowy | Co od czego zależy? |
+| 14 | **Integralność publiczna** | Obrona decyzji | Czy da się to uczciwie obronić publicznie? |
+| 15 | **Skalowanie** | Test skali | Co stanie się przy 10x, 100x, 1000x? |
 
 ---
 
@@ -173,13 +172,13 @@ Przykładowe funkcje:
 
 Werdykty CERBERA:
 
-| Werdykt      | Znaczenie                      |
-| ------------ | ------------------------------ |
-| **APPROVE**  | Działanie dopuszczalne         |
+| Werdykt | Znaczenie |
+|--------|-----------|
+| **APPROVE** | Działanie dopuszczalne |
 | **QUESTION** | Wymagana dodatkowa weryfikacja |
-| **WARN**     | Możliwe ryzyko                 |
-| **BLOCK**    | Działanie niedopuszczalne      |
-| **ESCALATE** | Przekaż do człowieka           |
+| **WARN** | Możliwe ryzyko |
+| **BLOCK** | Działanie niedopuszczalne |
+| **ESCALATE** | Przekaż do człowieka |
 
 ---
 
