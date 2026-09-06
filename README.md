@@ -1,3 +1,63 @@
+# Every Code / ALFA archive
+
+> **Terminal coding-agent snapshot with ALFA research and orchestration materials**
+
+## Scope of this repository
+
+The root tree combines an **Every Code** terminal-agent snapshot with several
+ALFA-related research, demonstration, and orchestration directories. These are
+not one deployable application. The existing Every Code documentation below is
+preserved because it describes the terminal-agent portion; the sections here
+make the mixed repository layout explicit.
+
+## Verified contents
+
+```text
+README.md, package.json, Dockerfile     Every Code tooling and configuration
+ALFA-360/                               manifesto and supporting material
+ALFA-BRIDGE/                            small Flask bridge and tests
+CERBER/, GUARDIAN/                      Python conceptual/core modules
+COLLECTIVE-MIND/                        collective-mind modules
+ALFA-ECOSYSTEM-COMPLETE/                bundled ecosystem snapshot
+requirements.txt                        Python dependency set for ALFA material
+```
+
+## Local use
+
+The root `package.json` declares Node.js 22+ and pnpm 9+ for the terminal-agent
+tooling. Its build scripts expect a CLI workspace that is not present in this
+repository snapshot, so a root build is not a reliable installation route.
+
+For the isolated bridge prototype, install only its declared dependencies and
+review its source before exposing it on a network:
+
+```bash
+cd ALFA-BRIDGE
+python -m pip install -r requirements.txt
+python src/bridge_server.py
+```
+
+The broader Python requirement set is listed in the root `requirements.txt`;
+some packages and integrations are optional. Use a virtual environment and
+never copy API keys from examples into version-controlled files.
+
+## Status and boundaries
+
+The ALFA directories contain exploratory framework material and small Python
+components. They should be evaluated component by component; labels such as
+"zero hallucination" in historical documents are goals or project terminology,
+not a guarantee of model behaviour. Configuration examples include external
+agent commands and permissive options: treat them as examples to audit and
+adapt, not as a secure default.
+
+## License
+
+The repository-level `LICENSE` is Apache-2.0. Some nested documents contain
+their own attribution or licence text; consult the applicable file before
+reusing a specific component.
+
+---
+
 # Every CODE
 <img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/f8653cfa-34a2-40a2-9340-5fed0fe8c925" />
 
